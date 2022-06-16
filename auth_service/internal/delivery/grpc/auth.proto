@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package internal.delivery.grpc;
+
+option go_package = "auth_service/internal/delivery/grpc";
+
+// The auth service definition.
+service Auth{
+  rpc SignUp(SignUpRequest) returns(SignUpReply){}
+  rpc SignIn(SignInRequest) returns(SignInReply){}
+}
+
+message SignUpRequest{
+    string username = 1;
+    string email = 2;
+    string password = 3;
+    string first_name = 4;
+    string last_name = 5;
+    string gender = 6;
+    string country = 7;
+    string city = 8;
+    string phone = 9;
+}
+
+message SignUpReply{
+
+}
+
+message SignInRequest{
+  string email = 1;
+  string password = 2;
+}
+
+message SignInReply{
+
+}
