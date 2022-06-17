@@ -6,11 +6,6 @@ import (
 )
 
 type (
-	Auth interface {
-		SignUp() error
-		SignIn() error
-	}
-
 	AuthRepository interface {
 		Create(ctx context.Context, user *domain.User) error
 		FindByUsername(ctx context.Context, username string) (domain.User, error)

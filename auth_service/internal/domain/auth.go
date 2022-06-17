@@ -1,6 +1,8 @@
 package domain
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	ID           string    `json:"id"`
@@ -28,4 +30,21 @@ type CreateUserDTO struct {
 	Country        string `json:"country"`
 	City           string `json:"city"`
 	Phone          string `json:"phone"`
+}
+
+func NewUser(dto CreateUserDTO) *User {
+	return &User{
+		ID:           "",
+		Username:     dto.Username,
+		Email:        dto.Email,
+		PasswordHash: dto.Password,
+		FirstName:    dto.FirstName,
+		LastName:     dto.LastName,
+		Gender:       dto.Gender,
+		Country:      dto.Country,
+		City:         dto.City,
+		Phone:        dto.Phone,
+		CreatedAt:    time.Now(),
+		Role:         0,
+	}
 }

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package internal.delivery.grpc;
 
-option go_package = "auth_service/internal/delivery/grpc";
+option go_package = "github.com/musique/auth_service/internal/delivery/grpc";
 
 // The auth service definition.
 service Auth{
@@ -14,12 +14,13 @@ message SignUpRequest{
     string username = 1;
     string email = 2;
     string password = 3;
-    string first_name = 4;
-    string last_name = 5;
-    string gender = 6;
-    string country = 7;
-    string city = 8;
-    string phone = 9;
+    string repeat_password = 4;
+    string first_name = 5;
+    string last_name = 6;
+    string gender = 7;
+    string country = 8;
+    string city = 9;
+    string phone = 10;
 }
 
 message SignUpReply{
