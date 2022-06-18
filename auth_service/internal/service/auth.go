@@ -3,23 +3,23 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/gxrlxv/musique/auth_service/internal/delivery/grpc"
+	v1 "github.com/gxrlxv/musique/auth_service/api/auth/v1"
 	"github.com/gxrlxv/musique/auth_service/internal/domain"
 )
 
 type authService struct {
-	grpc.UnimplementedAuthServer
+	v1.UnimplementedAuthServer
 	repository AuthRepository
 }
 
 func NewAuthService(repo AuthRepository) *authService {
 	return &authService{
-		UnimplementedAuthServer: grpc.UnimplementedAuthServer{},
+		UnimplementedAuthServer: v1.UnimplementedAuthServer{},
 		repository:              repo,
 	}
 }
 
-func (a *authService) SignUp(ctx context.Context, in *grpc.SignUpRequest) (*grpc.SignUpReply, error) {
+func (a *authService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.SignUpReply, error) {
 	if _, err := a.repository.FindByUsername(ctx, in.Username); err != nil {
 		return nil, err
 	}
@@ -58,6 +58,6 @@ func (a *authService) SignUp(ctx context.Context, in *grpc.SignUpRequest) (*grpc
 	return nil, nil
 }
 
-func (a *authService) SignIn(ctx context.Context, in *grpc.SignInRequest) (*grpc.SignInReply, error) {
+func (a *authService) SignIn(ctx context.Context, in *v1.SignInRequest) (*v1.SignInReply, error) {
 	return nil, nil
 }
