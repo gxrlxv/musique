@@ -2,11 +2,16 @@ syntax = "proto3";
 
 package internal.delivery.grpc;
 
-option go_package = "github.com/musique/auth_service/internal/delivery/grpc";
+
+
+option go_package = "github.com/gxrlxv/musique/auth_service/internal/delivery/grpc";
+
 
 // The auth service definition.
 service Auth{
-  rpc SignUp(SignUpRequest) returns(SignUpReply){}
+  rpc SignUp(SignUpRequest) returns(SignUpReply){
+
+  }
   rpc SignIn(SignInRequest) returns(SignInReply){}
 }
 
