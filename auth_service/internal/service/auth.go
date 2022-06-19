@@ -2,41 +2,28 @@ package service
 
 import (
 	"context"
-	"fmt"
 	v1 "github.com/gxrlxv/musique/auth_service/api/auth/v1"
 	"github.com/gxrlxv/musique/auth_service/internal/domain"
 )
 
-type authService struct {
-	v1.UnimplementedAuthServer
-	repository AuthRepository
+type AuthUseCase interface {
+	SignUp(ctx context.Context, dto domain.CreateUserDTO) error
+	SignIn(ctx context.Context, dto domain.CreateUserDTO) (domain.User, error)
 }
 
-func NewAuthService(repo AuthRepository) *authService {
+type authService struct {
+	v1.UnimplementedAuthServer
+	uc AuthUseCase
+}
+
+func NewAuthService(useCase AuthUseCase) *authService {
 	return &authService{
 		UnimplementedAuthServer: v1.UnimplementedAuthServer{},
-		repository:              repo,
+		uc:                      useCase,
 	}
 }
 
 func (a *authService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.SignUpReply, error) {
-	if _, err := a.repository.FindByUsername(ctx, in.Username); err != nil {
-		return nil, err
-	}
-
-	if _, err := a.repository.FindByEmail(ctx, in.Email); err != nil {
-		return nil, err
-	}
-
-	if _, err := a.repository.FindByPhone(ctx, in.Phone); err != nil {
-		return nil, err
-	}
-
-	if in.Password != in.RepeatPassword {
-		return nil, fmt.Errorf("passwords don't match")
-	}
-
-	//passHash := PasswordHash(in.Password)
 	userDTO := domain.CreateUserDTO{
 		Username:       in.Username,
 		Email:          in.Email,
@@ -50,8 +37,7 @@ func (a *authService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 		Phone:          in.Phone,
 	}
 
-	err := a.repository.Create(ctx, domain.NewUser(userDTO))
-	if err != nil {
+	if err := a.uc.SignUp(ctx, userDTO); err != nil {
 		return nil, err
 	}
 
