@@ -55,6 +55,20 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) erro
 	return nil
 }
 
-func (a *authUseCase) SignIn(ctx context.Context, dto domain.CreateUserDTO) (domain.User, error) {
+func (a *authUseCase) SignIn(ctx context.Context, email, password string) (domain.User, error) {
+	user, err := a.repo.FindByEmail(ctx, email)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	passwordHash, err := a.hasher.Hash(password)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	if user.PasswordHash != passwordHash {
+		return domain.User{}, fmt.Errorf("incorrect password")
+	}
+
 	return domain.User{}, nil
 }

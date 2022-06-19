@@ -8,7 +8,7 @@ import (
 
 type AuthUseCase interface {
 	SignUp(ctx context.Context, dto domain.CreateUserDTO) error
-	SignIn(ctx context.Context, dto domain.CreateUserDTO) (domain.User, error)
+	SignIn(ctx context.Context, email, password string) (domain.User, error)
 }
 
 type authService struct {
@@ -45,5 +45,9 @@ func (a *authService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 }
 
 func (a *authService) SignIn(ctx context.Context, in *v1.SignInRequest) (*v1.SignInReply, error) {
+	_, err := a.uc.SignIn(ctx, in.Email, in.Password)
+	if err != nil {
+		return nil, err
+	}
 	return nil, nil
 }
