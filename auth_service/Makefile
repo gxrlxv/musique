@@ -1,6 +1,9 @@
 .DEFAULT_GOAL := gen
 
 gen:
-	protoc --go_out=. --go_opt=paths=source_relative \
-        --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-        api/auth/v1/auth.proto
+	protoc  --proto_path=./api \
+            --proto_path=./third_party \
+			--go_out=paths=source_relative:./api \
+         	--go-grpc_out=paths=source_relative:./api \
+           --grpc-gateway_out=paths=source_relative:./api \
+       		 api/auth/v1/auth.proto

@@ -2,13 +2,25 @@ syntax = "proto3";
 
 package api.auth.v1;
 
+import "google/api/annotations.proto";
+
 option go_package = "github.com/gxrlxv/musique/auth_service/api/auth/v1";
 
 
 // The auth service definition.
 service Auth{
-  rpc SignUp(SignUpRequest) returns(SignUpReply){}
-  rpc SignIn(SignInRequest) returns(SignInReply){}
+  rpc SignUp(SignUpRequest) returns(SignUpReply){
+    option (google.api.http) = {
+      post: "/auth/sign-up"
+      body: "*"
+    };
+  };
+  rpc SignIn(SignInRequest) returns(SignInReply){
+    option (google.api.http) = {
+      post: "/auth/sign-in"
+      body: "*"
+    };
+  };
 }
 
 message SignUpRequest{
