@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/gxrlxv/musique/auth_service/pkg/logging"
 	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/sirupsen/logrus"
 
 	"sync"
 )
@@ -35,8 +36,8 @@ func GetConfig() *Config {
 		instance = &Config{}
 		if err := cleanenv.ReadConfig("config.yml", instance); err != nil {
 			help, _ := cleanenv.GetDescription(instance, nil)
-			logger.Info(help)
-			logger.Fatal(err)
+			logrus.Info(help)
+			logrus.Fatal(err)
 		}
 	})
 	return instance

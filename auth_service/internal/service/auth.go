@@ -4,6 +4,7 @@ import (
 	"context"
 	v1 "github.com/gxrlxv/musique/auth_service/api/auth/v1"
 	"github.com/gxrlxv/musique/auth_service/internal/domain"
+	"github.com/gxrlxv/musique/auth_service/pkg/logging"
 )
 
 type AuthUseCase interface {
@@ -11,19 +12,22 @@ type AuthUseCase interface {
 	SignIn(ctx context.Context, email, password string) (domain.User, error)
 }
 
-type authService struct {
+type AuthService struct {
 	v1.UnimplementedAuthServer
-	uc AuthUseCase
+	uc  AuthUseCase
+	log *logging.Logger
 }
 
-func NewAuthService(useCase AuthUseCase) *authService {
-	return &authService{
+func NewAuthService(useCase AuthUseCase, log *logging.Logger) *AuthService {
+	return &AuthService{
 		UnimplementedAuthServer: v1.UnimplementedAuthServer{},
 		uc:                      useCase,
+		log:                     log,
 	}
 }
 
-func (a *authService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.SignUpReply, error) {
+func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.SignUpReply, error) {
+	a.log.Info("signUp service")
 	userDTO := domain.CreateUserDTO{
 		Username:       in.Username,
 		Email:          in.Email,
@@ -41,10 +45,10 @@ func (a *authService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 		return nil, err
 	}
 
-	return nil, nil
+	return &v1.SignUpReply{}, nil
 }
 
-func (a *authService) SignIn(ctx context.Context, in *v1.SignInRequest) (*v1.SignInReply, error) {
+func (a *AuthService) SignIn(ctx context.Context, in *v1.SignInRequest) (*v1.SignInReply, error) {
 	_, err := a.uc.SignIn(ctx, in.Email, in.Password)
 	if err != nil {
 		return nil, err

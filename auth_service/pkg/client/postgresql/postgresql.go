@@ -6,10 +6,10 @@ import (
 	"github.com/gxrlxv/musique/auth_service/internal/config"
 	repeatable "github.com/gxrlxv/musique/auth_service/pkg/utils"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
-	"log"
 	"time"
 )
 
@@ -35,7 +35,7 @@ func NewClient(ctx context.Context, maxAttempts int, sc config.StorageConfig) (p
 	}, maxAttempts, 5*time.Second)
 
 	if err != nil {
-		log.Fatal("error do with tries postgresql")
+		logrus.Fatal("error do with tries postgresql")
 	}
 
 	return pool, nil
