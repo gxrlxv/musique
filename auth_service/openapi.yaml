@@ -7,6 +7,30 @@ info:
     description: The auth service definition.
     version: 0.0.1
 paths:
+    /auth/refresh:
+        post:
+            tags:
+                - Auth
+            operationId: Auth_RefreshToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RefreshTokenRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RefreshTokenReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /auth/sign-in:
         post:
             tags:
@@ -65,9 +89,21 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        RefreshTokenReply:
+            type: object
+            properties:
+                tokens:
+                    $ref: '#/components/schemas/Tokens'
+        RefreshTokenRequest:
+            type: object
+            properties:
+                refreshToken:
+                    type: string
         SignInReply:
             type: object
-            properties: {}
+            properties:
+                tokens:
+                    $ref: '#/components/schemas/Tokens'
         SignInRequest:
             type: object
             properties:
@@ -78,8 +114,8 @@ components:
         SignUpReply:
             type: object
             properties:
-                username:
-                    type: string
+                tokens:
+                    $ref: '#/components/schemas/Tokens'
         SignUpRequest:
             type: object
             properties:
@@ -119,5 +155,12 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        Tokens:
+            type: object
+            properties:
+                accessToken:
+                    type: string
+                refreshToken:
+                    type: string
 tags:
     - name: Auth

@@ -15,12 +15,25 @@ service Auth{
       body: "*"
     };
   };
+
   rpc SignIn(SignInRequest) returns(SignInReply){
     option (google.api.http) = {
       post: "/auth/sign-in"
       body: "*"
     };
   };
+
+  rpc RefreshToken(RefreshTokenRequest) returns(RefreshTokenReply){
+    option (google.api.http) = {
+      post: "/auth/refresh"
+      body: "*"
+    };
+  };
+}
+
+message Tokens{
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
 message SignUpRequest{
@@ -37,7 +50,7 @@ message SignUpRequest{
 }
 
 message SignUpReply{
-  string username = 1;
+  Tokens tokens = 1;
 }
 
 message SignInRequest{
@@ -46,5 +59,13 @@ message SignInRequest{
 }
 
 message SignInReply{
+  Tokens tokens = 1;
+}
 
+message RefreshTokenRequest{
+  string refresh_token = 1;
+}
+
+message RefreshTokenReply{
+  Tokens tokens = 1;
 }
