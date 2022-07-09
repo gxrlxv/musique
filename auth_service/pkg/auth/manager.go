@@ -17,6 +17,10 @@ type TokenManager interface {
 type Manager struct {
 	signingKey string
 }
+type MyCustomClaims struct {
+	Role string `json:"role"`
+	jwt.StandardClaims
+}
 
 func NewManager(signingKey string) (*Manager, error) {
 	if signingKey == "" {
@@ -26,11 +30,15 @@ func NewManager(signingKey string) (*Manager, error) {
 	return &Manager{signingKey: signingKey}, nil
 }
 
-func (m *Manager) NewJWT(userId string, ttl time.Duration) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(ttl).Unix(),
-		Subject:   userId,
-	})
+func (m *Manager) NewJWT(userId, role string, ttl time.Duration) (string, error) {
+	claims := MyCustomClaims{
+		role,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(ttl).Unix(),
+			Subject:   userId,
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte(m.signingKey))
 }

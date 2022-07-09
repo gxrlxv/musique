@@ -10,6 +10,7 @@ import (
 type AuthUseCase interface {
 	SignUp(ctx context.Context, dto domain.CreateUserDTO) error
 	SignIn(ctx context.Context, email, password string) (domain.User, error)
+	NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error)
 }
 
 type AuthService struct {

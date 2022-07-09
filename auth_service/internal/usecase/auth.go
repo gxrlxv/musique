@@ -3,9 +3,12 @@ package usecase
 import (
 	"context"
 	"fmt"
+	v1 "github.com/gxrlxv/musique/auth_service/api/auth/v1"
 	"github.com/gxrlxv/musique/auth_service/internal/domain"
+	"github.com/gxrlxv/musique/auth_service/pkg/auth"
 	"github.com/gxrlxv/musique/auth_service/pkg/hash"
 	"github.com/gxrlxv/musique/auth_service/pkg/logging"
+	"time"
 )
 
 type AuthRepository interface {
@@ -16,9 +19,11 @@ type AuthRepository interface {
 }
 
 type authUseCase struct {
-	repo   AuthRepository
-	hasher hash.PasswordHasher
-	log    *logging.Logger
+	repo           AuthRepository
+	hasher         hash.PasswordHasher
+	tokenManager   auth.Manager
+	log            *logging.Logger
+	accessTokenTTL time.Duration
 }
 
 func NewAuthUseCase(repository AuthRepository, hasher hash.PasswordHasher, log *logging.Logger) *authUseCase {
@@ -75,4 +80,17 @@ func (a *authUseCase) SignIn(ctx context.Context, email, password string) (domai
 	}
 
 	return domain.User{}, nil
+}
+
+func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error) {
+	access, err := a.tokenManager.NewJWT(userId, role, a.accessTokenTTL)
+	if err != nil {
+		return &v1.Tokens{}, err
+	}
+
+	refresh, err := a.tokenManager.NewRefreshToken()
+	if err != nil {
+		return &v1.Tokens{}, err
+	}
+	return &v1.Tokens{AccessToken: access, RefreshToken: refresh}, err
 }
