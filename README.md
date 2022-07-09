@@ -1,4 +1,4 @@
 # Musique
 Music streaming service
 # Service data model
-![musique_data](https://user-images.githubusercontent.com/71068953/173306094-4772262c-f191-4b53-a40e-be912d763552.png)
+![musique_data](https://user-images.githubusercontent.com/71068953/178100529-f7801f3a-8720-4c21-b8c5-505c4c0cd2d0.png)
