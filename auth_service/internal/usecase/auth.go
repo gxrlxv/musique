@@ -13,9 +13,10 @@ import (
 
 type AuthRepository interface {
 	Create(ctx context.Context, user *domain.User) error
-	FindByUsername(ctx context.Context, username string) (domain.User, error)
-	FindByEmail(ctx context.Context, email string) (domain.User, error)
-	FindByPhone(ctx context.Context, phone string) (domain.User, error)
+	GetByUsername(ctx context.Context, username string) (domain.User, error)
+	GetByEmail(ctx context.Context, email string) (domain.User, error)
+	GetByPhone(ctx context.Context, phone string) (domain.User, error)
+	SetSession(ctx context.Context, session *domain.Session) error
 }
 
 type authUseCase struct {
@@ -36,15 +37,15 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) erro
 		return fmt.Errorf("password don't match")
 	}
 
-	if _, err := a.repo.FindByEmail(ctx, dto.Email); err == nil {
+	if _, err := a.repo.GetByEmail(ctx, dto.Email); err == nil {
 		return err
 	}
 
-	if _, err := a.repo.FindByUsername(ctx, dto.Username); err == nil {
+	if _, err := a.repo.GetByUsername(ctx, dto.Username); err == nil {
 		return err
 	}
 
-	if _, err := a.repo.FindByPhone(ctx, dto.Phone); err == nil {
+	if _, err := a.repo.GetByPhone(ctx, dto.Phone); err == nil {
 		return err
 	}
 	a.log.Info("hash password")
@@ -65,7 +66,7 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) erro
 }
 
 func (a *authUseCase) SignIn(ctx context.Context, email, password string) (domain.User, error) {
-	user, err := a.repo.FindByEmail(ctx, email)
+	user, err := a.repo.GetByEmail(ctx, email)
 	if err != nil {
 		return domain.User{}, err
 	}
@@ -92,5 +93,5 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 	if err != nil {
 		return &v1.Tokens{}, err
 	}
-	return &v1.Tokens{AccessToken: access, RefreshToken: refresh}, err
+	return &v1.Tokens{AccessToken: access, RefreshToken: refresh}, nil
 }

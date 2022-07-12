@@ -48,7 +48,7 @@ func (ar *authRepository) Create(ctx context.Context, user *domain.User) error {
 	return nil
 }
 
-func (ar *authRepository) FindByUsername(ctx context.Context, username string) (domain.User, error) {
+func (ar *authRepository) GetByUsername(ctx context.Context, username string) (domain.User, error) {
 	q := `
 		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role FROM public.user WHERE username = $1
 	`
@@ -64,7 +64,7 @@ func (ar *authRepository) FindByUsername(ctx context.Context, username string) (
 	return u, nil
 }
 
-func (ar *authRepository) FindByEmail(ctx context.Context, email string) (domain.User, error) {
+func (ar *authRepository) GetByEmail(ctx context.Context, email string) (domain.User, error) {
 	q := `
 		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role FROM public.user WHERE email = $1
 	`
@@ -81,7 +81,7 @@ func (ar *authRepository) FindByEmail(ctx context.Context, email string) (domain
 	return u, nil
 }
 
-func (ar *authRepository) FindByPhone(ctx context.Context, phone string) (domain.User, error) {
+func (ar *authRepository) GetByPhone(ctx context.Context, phone string) (domain.User, error) {
 	q := `
 		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role FROM public.user WHERE phone = $1
 	`
@@ -95,4 +95,9 @@ func (ar *authRepository) FindByPhone(ctx context.Context, phone string) (domain
 	}
 
 	return u, nil
+}
+
+func (ar *authRepository) SetSession(ctx context.Context, session *domain.Session) error {
+
+	return nil
 }
