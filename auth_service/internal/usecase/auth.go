@@ -20,11 +20,12 @@ type AuthRepository interface {
 }
 
 type authUseCase struct {
-	repo           AuthRepository
-	hasher         hash.PasswordHasher
-	tokenManager   auth.Manager
-	log            *logging.Logger
-	accessTokenTTL time.Duration
+	repo            AuthRepository
+	hasher          hash.PasswordHasher
+	tokenManager    auth.Manager
+	log             *logging.Logger
+	accessTokenTTL  time.Duration
+	refreshTokenTTL time.Duration
 }
 
 func NewAuthUseCase(repository AuthRepository, hasher hash.PasswordHasher, log *logging.Logger) *authUseCase {
@@ -93,5 +94,16 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 	if err != nil {
 		return &v1.Tokens{}, err
 	}
+
+	session := domain.Session{
+		UserId:       userId,
+		RefreshToken: refresh,
+		ExpiresAt:    time.Now().Add(a.refreshTokenTTL),
+	}
+
+	if err := a.repo.SetSession(ctx, &session); err != nil {
+		return &v1.Tokens{}, err
+	}
+
 	return &v1.Tokens{AccessToken: access, RefreshToken: refresh}, nil
 }

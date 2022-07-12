@@ -104,6 +104,7 @@ func (ar *authRepository) SetSession(ctx context.Context, session *domain.Sessio
 			values
 				($1, $2, $3)`
 	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
+
 	_, err := ar.client.Exec(ctx, q, session.UserId, session.RefreshToken, session.ExpiresAt)
 	if err != nil {
 		return err
