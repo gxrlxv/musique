@@ -41,15 +41,15 @@ func (ar *authRepository) Create(ctx context.Context, user *domain.User) (*domai
 		if pgErr, ok := err.(*pgconn.PgError); ok {
 			newErr := fmt.Errorf("SQL error: %s, Detail: %s, Where: %s, Code: %s, SQLstate: %s", pgErr.Message, pgErr.Detail, pgErr.Where, pgErr.Code, pgErr.SQLState())
 			ar.log.Error(newErr)
-			return nil, newErr
+			return &domain.User{}, newErr
 		}
-		return nil, err
+		return &domain.User{}, err
 	}
 
 	return user, nil
 }
 
-func (ar *authRepository) GetByUsername(ctx context.Context, username string) (domain.User, error) {
+func (ar *authRepository) GetByUsername(ctx context.Context, username string) (*domain.User, error) {
 	q := `
 		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role FROM public.user WHERE username = $1
 	`
@@ -59,13 +59,13 @@ func (ar *authRepository) GetByUsername(ctx context.Context, username string) (d
 	err := ar.client.QueryRow(ctx, q, username).Scan(&u.ID, &u.Username, &u.Email, &u.PasswordHash, &u.FirstName,
 		&u.LastName, &u.Gender, &u.Country, &u.City, &u.Phone, &u.CreatedAt, &u.Role)
 	if err != nil {
-		return domain.User{}, err
+		return &domain.User{}, err
 	}
 
-	return u, nil
+	return &u, nil
 }
 
-func (ar *authRepository) GetByEmail(ctx context.Context, email string) (domain.User, error) {
+func (ar *authRepository) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	q := `
 		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role FROM public.user WHERE email = $1
 	`
@@ -76,13 +76,13 @@ func (ar *authRepository) GetByEmail(ctx context.Context, email string) (domain.
 		&u.LastName, &u.Gender, &u.Country, &u.City, &u.Phone, &u.CreatedAt, &u.Role)
 	if err != nil {
 		ar.log.Info(err)
-		return domain.User{}, err
+		return &domain.User{}, err
 	}
 
-	return u, nil
+	return &u, nil
 }
 
-func (ar *authRepository) GetByPhone(ctx context.Context, phone string) (domain.User, error) {
+func (ar *authRepository) GetByPhone(ctx context.Context, phone string) (*domain.User, error) {
 	q := `
 		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role FROM public.user WHERE phone = $1
 	`
@@ -92,10 +92,10 @@ func (ar *authRepository) GetByPhone(ctx context.Context, phone string) (domain.
 	err := ar.client.QueryRow(ctx, q, phone).Scan(&u.ID, &u.Username, &u.Email, &u.PasswordHash, &u.FirstName,
 		&u.LastName, &u.Gender, &u.Country, &u.City, &u.Phone, &u.CreatedAt, &u.Role)
 	if err != nil {
-		return domain.User{}, err
+		return &domain.User{}, err
 	}
 
-	return u, nil
+	return &u, nil
 }
 
 func (ar *authRepository) SetSession(ctx context.Context, session *domain.Session) error {

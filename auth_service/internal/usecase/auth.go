@@ -13,9 +13,9 @@ import (
 
 type AuthRepository interface {
 	Create(ctx context.Context, user *domain.User) (*domain.User, error)
-	GetByUsername(ctx context.Context, username string) (domain.User, error)
-	GetByEmail(ctx context.Context, email string) (domain.User, error)
-	GetByPhone(ctx context.Context, phone string) (domain.User, error)
+	GetByUsername(ctx context.Context, username string) (*domain.User, error)
+	GetByEmail(ctx context.Context, email string) (*domain.User, error)
+	GetByPhone(ctx context.Context, phone string) (*domain.User, error)
 	SetSession(ctx context.Context, session *domain.Session) error
 }
 
@@ -66,22 +66,22 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 	return user, nil
 }
 
-func (a *authUseCase) SignIn(ctx context.Context, email, password string) (domain.User, error) {
+func (a *authUseCase) SignIn(ctx context.Context, email, password string) (*domain.User, error) {
 	user, err := a.repo.GetByEmail(ctx, email)
 	if err != nil {
-		return domain.User{}, err
+		return &domain.User{}, err
 	}
 
 	passwordHash, err := a.hasher.Hash(password)
 	if err != nil {
-		return domain.User{}, err
+		return &domain.User{}, err
 	}
 
 	if user.PasswordHash != passwordHash {
-		return domain.User{}, fmt.Errorf("incorrect password")
+		return &domain.User{}, fmt.Errorf("incorrect password")
 	}
 
-	return domain.User{}, nil
+	return user, nil
 }
 
 func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error) {
