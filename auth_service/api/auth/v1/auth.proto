@@ -50,7 +50,8 @@ message SignUpRequest{
 }
 
 message SignUpReply{
-  Tokens tokens = 1;
+  string id = 1;
+  Tokens tokens = 2;
 }
 
 message SignInRequest{
@@ -59,7 +60,8 @@ message SignInRequest{
 }
 
 message SignInReply{
-  Tokens tokens = 1;
+  string id = 1;
+  Tokens tokens = 2;
 }
 
 message RefreshTokenRequest{
