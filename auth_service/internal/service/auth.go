@@ -8,7 +8,7 @@ import (
 )
 
 type AuthUseCase interface {
-	SignUp(ctx context.Context, dto domain.CreateUserDTO) (string, error)
+	SignUp(ctx context.Context, dto domain.CreateUserDTO) (*domain.User, error)
 	SignIn(ctx context.Context, email, password string) (domain.User, error)
 	NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error)
 }
@@ -42,17 +42,17 @@ func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 		Phone:          in.Phone,
 	}
 
-	userID, err := a.uc.SignUp(ctx, userDTO)
+	user, err := a.uc.SignUp(ctx, userDTO)
 	if err != nil {
 		return &v1.SignUpReply{}, nil
 	}
 
-	tokens, err := a.uc.NewTokens(ctx, userID, "user")
+	tokens, err := a.uc.NewTokens(ctx, user.ID, user.Role)
 	if err != nil {
 		return nil, err
 	}
 
-	return &v1.SignUpReply{Id: userID, Tokens: tokens}, nil
+	return &v1.SignUpReply{Id: user.ID, Tokens: tokens}, nil
 }
 
 func (a *AuthService) SignIn(ctx context.Context, in *v1.SignInRequest) (*v1.SignInReply, error) {

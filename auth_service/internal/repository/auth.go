@@ -26,7 +26,7 @@ func formatQuery(q string) string {
 	return strings.ReplaceAll(strings.ReplaceAll(q, "\t", ""), "\n", " ")
 }
 
-func (ar *authRepository) Create(ctx context.Context, user *domain.User) (string, error) {
+func (ar *authRepository) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
 	q := `
 			insert into public.user 
 				(username, email, password, first_name, last_name, gender, country, city, phone) 
@@ -41,11 +41,12 @@ func (ar *authRepository) Create(ctx context.Context, user *domain.User) (string
 		if pgErr, ok := err.(*pgconn.PgError); ok {
 			newErr := fmt.Errorf("SQL error: %s, Detail: %s, Where: %s, Code: %s, SQLstate: %s", pgErr.Message, pgErr.Detail, pgErr.Where, pgErr.Code, pgErr.SQLState())
 			ar.log.Error(newErr)
-			return "", newErr
+			return nil, newErr
 		}
-		return "", err
+		return nil, err
 	}
-	return user.ID, nil
+
+	return user, nil
 }
 
 func (ar *authRepository) GetByUsername(ctx context.Context, username string) (domain.User, error) {

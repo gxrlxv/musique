@@ -12,7 +12,7 @@ import (
 )
 
 type AuthRepository interface {
-	Create(ctx context.Context, user *domain.User) (string, error)
+	Create(ctx context.Context, user *domain.User) (*domain.User, error)
 	GetByUsername(ctx context.Context, username string) (domain.User, error)
 	GetByEmail(ctx context.Context, email string) (domain.User, error)
 	GetByPhone(ctx context.Context, phone string) (domain.User, error)
@@ -32,38 +32,38 @@ func NewAuthUseCase(repository AuthRepository, hasher hash.PasswordHasher, log *
 	return &authUseCase{repo: repository, hasher: hasher, log: log}
 }
 
-func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (string, error) {
+func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*domain.User, error) {
 	a.log.Info("signUp use case")
 	if dto.Password != dto.RepeatPassword {
-		return "", fmt.Errorf("password don't match")
+		return nil, fmt.Errorf("password don't match")
 	}
 
 	if _, err := a.repo.GetByEmail(ctx, dto.Email); err == nil {
-		return "", err
+		return nil, err
 	}
 
 	if _, err := a.repo.GetByUsername(ctx, dto.Username); err == nil {
-		return "", err
+		return nil, err
 	}
 
 	if _, err := a.repo.GetByPhone(ctx, dto.Phone); err == nil {
-		return "", err
+		return nil, err
 	}
 	a.log.Info("hash password")
 	passwordHash, err := a.hasher.Hash(dto.Password)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	user := domain.NewUser(dto, passwordHash)
+	model := domain.NewUser(dto, passwordHash)
 
-	userID, err := a.repo.Create(ctx, user)
+	user, err := a.repo.Create(ctx, model)
 	if err != nil {
 		a.log.Info(err)
-		return "", err
+		return nil, err
 	}
 
-	return userID, nil
+	return user, nil
 }
 
 func (a *authUseCase) SignIn(ctx context.Context, email, password string) (domain.User, error) {

@@ -16,7 +16,7 @@ type User struct {
 	City         string    `json:"city"`
 	Phone        string    `json:"phone"`
 	CreatedAt    time.Time `json:"created_at"`
-	Role         int       `json:"role"`
+	Role         string    `json:"role"`
 }
 
 type CreateUserDTO struct {
@@ -45,6 +45,6 @@ func NewUser(dto CreateUserDTO, passwordHash string) *User {
 		City:         dto.City,
 		Phone:        dto.Phone,
 		CreatedAt:    time.Now(),
-		Role:         0,
+		Role:         "user",
 	}
 }
