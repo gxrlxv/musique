@@ -30,7 +30,7 @@ service Auth{
     };
   };
 
-  rpc Identity(IdentityRequest) returns(IdentityReply){
+  rpc Identify(IdentityRequest) returns(IdentityReply){
 
   }
 }

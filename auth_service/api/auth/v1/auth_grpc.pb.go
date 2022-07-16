@@ -25,7 +25,7 @@ type AuthClient interface {
 	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpReply, error)
 	SignIn(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInReply, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenReply, error)
-	Identity(ctx context.Context, in *IdentityRequest, opts ...grpc.CallOption) (*IdentityReply, error)
+	Identify(ctx context.Context, in *IdentityRequest, opts ...grpc.CallOption) (*IdentityReply, error)
 }
 
 type authClient struct {
@@ -63,9 +63,9 @@ func (c *authClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, 
 	return out, nil
 }
 
-func (c *authClient) Identity(ctx context.Context, in *IdentityRequest, opts ...grpc.CallOption) (*IdentityReply, error) {
+func (c *authClient) Identify(ctx context.Context, in *IdentityRequest, opts ...grpc.CallOption) (*IdentityReply, error) {
 	out := new(IdentityReply)
-	err := c.cc.Invoke(ctx, "/api.auth.v1.Auth/Identity", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.auth.v1.Auth/Identify", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ type AuthServer interface {
 	SignUp(context.Context, *SignUpRequest) (*SignUpReply, error)
 	SignIn(context.Context, *SignInRequest) (*SignInReply, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenReply, error)
-	Identity(context.Context, *IdentityRequest) (*IdentityReply, error)
+	Identify(context.Context, *IdentityRequest) (*IdentityReply, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -96,8 +96,8 @@ func (UnimplementedAuthServer) SignIn(context.Context, *SignInRequest) (*SignInR
 func (UnimplementedAuthServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
-func (UnimplementedAuthServer) Identity(context.Context, *IdentityRequest) (*IdentityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Identity not implemented")
+func (UnimplementedAuthServer) Identify(context.Context, *IdentityRequest) (*IdentityReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Identify not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -166,20 +166,20 @@ func _Auth_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_Identity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Auth_Identify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(IdentityRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).Identity(ctx, in)
+		return srv.(AuthServer).Identify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.auth.v1.Auth/Identity",
+		FullMethod: "/api.auth.v1.Auth/Identify",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Identity(ctx, req.(*IdentityRequest))
+		return srv.(AuthServer).Identify(ctx, req.(*IdentityRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -204,8 +204,8 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Auth_RefreshToken_Handler,
 		},
 		{
-			MethodName: "Identity",
-			Handler:    _Auth_Identity_Handler,
+			MethodName: "Identify",
+			Handler:    _Auth_Identify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
