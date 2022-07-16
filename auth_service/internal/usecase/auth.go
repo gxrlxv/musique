@@ -117,3 +117,12 @@ func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (str
 
 	return userId, nil
 }
+
+func (a *authUseCase) Identify(ctx context.Context, access string) (string, error) {
+	userId, err := a.tokenManager.Parse(access)
+	if err != nil {
+		return "", err
+	}
+	
+	return userId, nil
+}
