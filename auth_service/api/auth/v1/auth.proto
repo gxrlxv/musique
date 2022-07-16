@@ -80,5 +80,5 @@ message IdentityRequest {
   string access_token = 1;
 }
 message IdentityReply {
-  int64 id = 1;
+  string id = 1;
 }

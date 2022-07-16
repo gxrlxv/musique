@@ -81,11 +81,16 @@ func (a *AuthService) RefreshToken(ctx context.Context, in *v1.RefreshTokenReque
 	if err != nil {
 		return nil, err
 	}
-	
+
 	tokens, err := a.uc.NewTokens(ctx, userId, "")
 	if err != nil {
 		return nil, err
 	}
 
 	return &v1.RefreshTokenReply{Tokens: tokens}, nil
+}
+
+func (a *AuthService) Identify(ctx context.Context, in *v1.IdentityRequest) (*v1.IdentityReply, error) {
+
+	return &v1.IdentityReply{}, nil
 }
