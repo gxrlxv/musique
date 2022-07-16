@@ -11,6 +11,7 @@ type AuthUseCase interface {
 	SignUp(ctx context.Context, dto domain.CreateUserDTO) (*domain.User, error)
 	SignIn(ctx context.Context, email, password string) (*domain.User, error)
 	NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error)
+	GetIdFromRefresh(ctx context.Context, refresh string) (string, error)
 }
 
 type AuthService struct {
@@ -75,7 +76,16 @@ func (a *AuthService) SignIn(ctx context.Context, in *v1.SignInRequest) (*v1.Sig
 	}, nil
 }
 
-func (a AuthService) RefreshToken(ctx context.Context, in *v1.RefreshTokenRequest) (*v1.RefreshTokenReply, error) {
+func (a *AuthService) RefreshToken(ctx context.Context, in *v1.RefreshTokenRequest) (*v1.RefreshTokenReply, error) {
+	userId, err := a.uc.GetIdFromRefresh(ctx, in.RefreshToken)
+	if err != nil {
+		return nil, err
+	}
+	
+	tokens, err := a.uc.NewTokens(ctx, userId, "")
+	if err != nil {
+		return nil, err
+	}
 
-	return &v1.RefreshTokenReply{}, nil
+	return &v1.RefreshTokenReply{Tokens: tokens}, nil
 }

@@ -17,6 +17,7 @@ type AuthRepository interface {
 	GetByEmail(ctx context.Context, email string) (*domain.User, error)
 	GetByPhone(ctx context.Context, phone string) (*domain.User, error)
 	SetSession(ctx context.Context, session *domain.Session) error
+	GetIdByToken(ctx context.Context, refresh string) (string, error)
 }
 
 type authUseCase struct {
@@ -106,4 +107,13 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 	}
 
 	return &v1.Tokens{AccessToken: access, RefreshToken: refresh}, nil
+}
+func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (string, error) {
+
+	userId, err := a.repo.GetIdByToken(ctx, refresh)
+	if err != nil {
+		return "", err
+	}
+
+	return userId, nil
 }

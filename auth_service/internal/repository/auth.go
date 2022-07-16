@@ -113,3 +113,19 @@ func (ar *authRepository) SetSession(ctx context.Context, session *domain.Sessio
 
 	return nil
 }
+
+func (ar *authRepository) GetIdByToken(ctx context.Context, refresh string) (string, error) {
+	//q := `
+	//		insert into public.session
+	//			(user_id, refresh_token, expires_at)
+	//		values
+	//			($1, $2, $3)`
+	//ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
+	//
+	//_, err := ar.client.Exec(ctx, q, session.UserId, session.RefreshToken, session.ExpiresAt)
+	//if err != nil {
+	//	return err
+	//}
+
+	return "", nil
+}
