@@ -100,9 +100,9 @@ func (ar *authRepository) GetByPhone(ctx context.Context, phone string) (*domain
 
 func (ar *authRepository) SetSession(ctx context.Context, session *domain.Session) error {
 	q := `
-			insert into public.session
+			INSERT INTO public.session
 				(user_id, refresh_token, expires_at)
-			values
+			VALUES
 				($1, $2, $3)`
 	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
 
@@ -115,17 +115,14 @@ func (ar *authRepository) SetSession(ctx context.Context, session *domain.Sessio
 }
 
 func (ar *authRepository) GetIdByToken(ctx context.Context, refresh string) (string, error) {
-	//q := `
-	//		insert into public.session
-	//			(user_id, refresh_token, expires_at)
-	//		values
-	//			($1, $2, $3)`
-	//ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
-	//
-	//_, err := ar.client.Exec(ctx, q, session.UserId, session.RefreshToken, session.ExpiresAt)
-	//if err != nil {
-	//	return err
-	//}
+	q := `select user_id FROM public.session WHERE refresh_token = $1`
+	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
 
-	return "", nil
+	var userId string
+	err := ar.client.QueryRow(ctx, q, refresh).Scan(userId)
+	if err != nil {
+		return "", err
+	}
+
+	return userId, nil
 }
