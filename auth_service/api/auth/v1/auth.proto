@@ -29,6 +29,10 @@ service Auth{
       body: "*"
     };
   };
+
+  rpc Identity(IdentityRequest) returns(IdentityReply){
+
+  }
 }
 
 message Tokens{
@@ -70,4 +74,11 @@ message RefreshTokenRequest{
 
 message RefreshTokenReply{
   Tokens tokens = 1;
+}
+
+message IdentityRequest {
+  string access_token = 1;
+}
+message IdentityReply {
+  int64 id = 1;
 }
