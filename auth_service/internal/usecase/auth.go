@@ -108,6 +108,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 
 	return &v1.Tokens{AccessToken: access, RefreshToken: refresh}, nil
 }
+
 func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (string, error) {
 
 	userId, err := a.repo.GetIdByToken(ctx, refresh)
@@ -123,6 +124,6 @@ func (a *authUseCase) Identify(ctx context.Context, access string) (string, erro
 	if err != nil {
 		return "", err
 	}
-	
+
 	return userId, nil
 }

@@ -5,6 +5,6 @@ listen:
 storage:
   host: localhost
   port: 5432
-  database: musique
+  database: musiqueDB
   username: gxrlxv
-  password: postgrespass
+  password: qwerty
