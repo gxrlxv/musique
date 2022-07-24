@@ -17,8 +17,11 @@ type Config struct {
 		Port   string `yaml:"port" env-default:"8080"`
 	} `yaml:"listen"`
 	Storage StorageConfig `yaml:"storage"`
-	Test    TestConfig    `yaml:"test"`
-	JWT     JWTConfig     `yaml:"jwt"`
+	JWT     struct {
+		AccessTokenTTL  time.Duration `yaml:"access_token_ttl"`
+		RefreshTokenTTL time.Duration `yaml:"refresh_token_ttl"`
+		SigningKey      string        `yaml:"signing_key"`
+	} `yaml:"jwt"`
 }
 
 type StorageConfig struct {
@@ -27,18 +30,6 @@ type StorageConfig struct {
 	Database string `json:"database"`
 	Username string `json:"username"`
 	Password string `json:"password"`
-}
-
-type TestConfig struct {
-	AccessTokenTTL  string `json:"access_token_ttl"`
-	RefreshTokenTTL string `json:"refresh_token_ttl"`
-	SigningKey      string `json:"signing_key"`
-}
-
-type JWTConfig struct {
-	AccessTokenTTL  time.Duration `json:"access_token_ttl"`
-	RefreshTokenTTL time.Duration `json:"refresh_token_ttl"`
-	SigningKey      string        `json:"signing_key"`
 }
 
 var instance *Config

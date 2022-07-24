@@ -40,8 +40,7 @@ func main() {
 	}
 
 	authUseCase := usecase.NewAuthUseCase(authRepo, hasher, *manager, log, cfg.JWT.AccessTokenTTL, cfg.JWT.RefreshTokenTTL)
-	log.Infof("access ttl: %s", cfg.Test.AccessTokenTTL)
-	log.Infof("refresh ttl: %s", cfg.Test.RefreshTokenTTL)
+
 	s := grpc.NewServer()
 
 	srv := service.NewAuthService(authUseCase, log)

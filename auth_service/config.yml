@@ -11,12 +11,7 @@ storage:
   username: gxrlxv
   password: qwerty
 
-test:
-  access_token_ttl: 15
-  refresh_token_ttl: 30
-  signing_key: salt
-
 jwt:
-  access_token_ttl: 15
-  refresh_token_ttl: 30
+  access_token_ttl: 15m
+  refresh_token_ttl: 30m
   signing_key: salt

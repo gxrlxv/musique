@@ -105,7 +105,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 		return &v1.Tokens{}, err
 	}
 
-	access, err := a.tokenManager.NewJWT(userId, role, a.accessTokenTTL*time.Minute)
+	access, err := a.tokenManager.NewJWT(userId, role, a.accessTokenTTL)
 	if err != nil {
 		return &v1.Tokens{}, err
 	}
@@ -113,7 +113,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 	session := domain.Session{
 		UserId:       userId,
 		RefreshToken: refresh,
-		ExpiresAt:    time.Now().Add(a.refreshTokenTTL * time.Minute),
+		ExpiresAt:    time.Now().Add(a.refreshTokenTTL),
 	}
 
 	if err := a.repo.UpdateSession(ctx, &session); err != nil {
