@@ -8,6 +8,7 @@ import (
 	"github.com/gxrlxv/musique/auth_service/internal/repository"
 	"github.com/gxrlxv/musique/auth_service/internal/service"
 	"github.com/gxrlxv/musique/auth_service/internal/usecase"
+	"github.com/gxrlxv/musique/auth_service/pkg/auth"
 	"github.com/gxrlxv/musique/auth_service/pkg/client/postgresql"
 	"github.com/gxrlxv/musique/auth_service/pkg/hash"
 	"github.com/gxrlxv/musique/auth_service/pkg/logging"
@@ -31,17 +32,16 @@ func main() {
 		log.Fatalf("%v", err)
 	}
 	authRepo := repository.NewRepository(postgreSQLClient, log)
-	//authServ := service.NewAuthService(authRepo)
 
-	//u, err := authRepo.FindByUsername(context.Background(), "gxr123")
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
-	//fmt.Println(u.ID)
 	hasher := hash.NewSHA1Hasher("salt")
+	manager, err := auth.NewManager("salt")
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
 
-	authUseCase := usecase.NewAuthUseCase(authRepo, hasher, log)
-
+	authUseCase := usecase.NewAuthUseCase(authRepo, hasher, *manager, log, cfg.JWT.AccessTokenTTL, cfg.JWT.RefreshTokenTTL)
+	log.Infof("access ttl: %s", cfg.Test.AccessTokenTTL)
+	log.Infof("refresh ttl: %s", cfg.Test.RefreshTokenTTL)
 	s := grpc.NewServer()
 
 	srv := service.NewAuthService(authUseCase, log)

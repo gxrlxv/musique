@@ -9,7 +9,7 @@ import (
 )
 
 type TokenManager interface {
-	NewJWT(userId string, ttl time.Duration) (string, error)
+	NewJWT(userId string, role string, ttl time.Duration) (string, error)
 	Parse(accessToken string) (string, error)
 	NewRefreshToken() (string, error)
 }

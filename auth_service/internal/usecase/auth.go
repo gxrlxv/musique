@@ -30,8 +30,15 @@ type authUseCase struct {
 	refreshTokenTTL time.Duration
 }
 
-func NewAuthUseCase(repository AuthRepository, hasher hash.PasswordHasher, log *logging.Logger) *authUseCase {
-	return &authUseCase{repo: repository, hasher: hasher, log: log}
+func NewAuthUseCase(repository AuthRepository, hasher hash.PasswordHasher, tokenManager auth.Manager, log *logging.Logger,
+	accessTokenTTL time.Duration, refreshTokenTTL time.Duration) *authUseCase {
+	return &authUseCase{
+		repo:            repository,
+		hasher:          hasher,
+		tokenManager:    tokenManager,
+		log:             log,
+		accessTokenTTL:  accessTokenTTL,
+		refreshTokenTTL: refreshTokenTTL}
 }
 
 func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*domain.User, error) {
@@ -93,12 +100,12 @@ func (a *authUseCase) SignIn(ctx context.Context, email, password string) (*doma
 }
 
 func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error) {
-	access, err := a.tokenManager.NewJWT(userId, role, a.accessTokenTTL)
+	refresh, err := a.tokenManager.NewRefreshToken()
 	if err != nil {
 		return &v1.Tokens{}, err
 	}
 
-	refresh, err := a.tokenManager.NewRefreshToken()
+	access, err := a.tokenManager.NewJWT(userId, role, a.accessTokenTTL*time.Minute)
 	if err != nil {
 		return &v1.Tokens{}, err
 	}
@@ -106,7 +113,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 	session := domain.Session{
 		UserId:       userId,
 		RefreshToken: refresh,
-		ExpiresAt:    time.Now().Add(a.refreshTokenTTL),
+		ExpiresAt:    time.Now().Add(a.refreshTokenTTL * time.Minute),
 	}
 
 	if err := a.repo.UpdateSession(ctx, &session); err != nil {
