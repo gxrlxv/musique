@@ -28,11 +28,11 @@ func formatQuery(q string) string {
 
 func (ar *authRepository) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
 	q := `
-			insert into public.user 
+			INSERT INTO public.user 
 				(username, email, password, first_name, last_name, gender, country, city, phone) 
-		  	values 
+		  	VALUES 
 				($1, $2, $3, $4, $5, $6, $7, $8, $9) 
-			returning id`
+			RETURNING id`
 	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
 
 	err := ar.client.QueryRow(ctx, q, user.Username, user.Email, user.PasswordHash, user.FirstName, user.LastName, user.Gender,
@@ -51,7 +51,9 @@ func (ar *authRepository) Create(ctx context.Context, user *domain.User) (*domai
 
 func (ar *authRepository) GetByUsername(ctx context.Context, username string) (*domain.User, error) {
 	q := `
-		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role FROM public.user WHERE username = $1
+		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role 
+		FROM public.user 
+		WHERE username = $1
 	`
 	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
 
@@ -67,7 +69,9 @@ func (ar *authRepository) GetByUsername(ctx context.Context, username string) (*
 
 func (ar *authRepository) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	q := `
-		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role FROM public.user WHERE email = $1
+		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role 
+		FROM public.user 
+		WHERE email = $1
 	`
 	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
 
@@ -84,7 +88,9 @@ func (ar *authRepository) GetByEmail(ctx context.Context, email string) (*domain
 
 func (ar *authRepository) GetByPhone(ctx context.Context, phone string) (*domain.User, error) {
 	q := `
-		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role FROM public.user WHERE phone = $1
+		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role 
+		FROM public.user 
+		WHERE phone = $1
 	`
 	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
 
@@ -98,15 +104,30 @@ func (ar *authRepository) GetByPhone(ctx context.Context, phone string) (*domain
 	return &u, nil
 }
 
-func (ar *authRepository) SetSession(ctx context.Context, session *domain.Session) error {
+func (ar *authRepository) CreateSession(ctx context.Context, userID string) error {
 	q := `
 			INSERT INTO public.session
-				(user_id, refresh_token, expires_at)
+				(user_id)
 			VALUES
-				($1, $2, $3)`
+				($1)`
 	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
 
-	_, err := ar.client.Exec(ctx, q, session.UserId, session.RefreshToken, session.ExpiresAt)
+	_, err := ar.client.Exec(ctx, q, userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (ar *authRepository) UpdateSession(ctx context.Context, session *domain.Session) error {
+	q := `
+			UPDATE public.session
+			SET refresh_token = $1, expires_at = $2
+			WHERE user_id = $3`
+	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
+
+	_, err := ar.client.Exec(ctx, q, session.RefreshToken, session.ExpiresAt, session.UserId)
 	if err != nil {
 		return err
 	}
@@ -115,7 +136,10 @@ func (ar *authRepository) SetSession(ctx context.Context, session *domain.Sessio
 }
 
 func (ar *authRepository) GetIdByToken(ctx context.Context, refresh string) (string, error) {
-	q := `select user_id FROM public.session WHERE refresh_token = $1`
+	q := `
+			SELECT user_id 
+			FROM public.session 
+			WHERE refresh_token = $1`
 	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
 
 	var userId string

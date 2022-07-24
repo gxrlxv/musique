@@ -16,7 +16,8 @@ type AuthRepository interface {
 	GetByUsername(ctx context.Context, username string) (*domain.User, error)
 	GetByEmail(ctx context.Context, email string) (*domain.User, error)
 	GetByPhone(ctx context.Context, phone string) (*domain.User, error)
-	SetSession(ctx context.Context, session *domain.Session) error
+	UpdateSession(ctx context.Context, session *domain.Session) error
+	CreateSession(ctx context.Context, userID string) error
 	GetIdByToken(ctx context.Context, refresh string) (string, error)
 }
 
@@ -64,6 +65,12 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 		return nil, err
 	}
 
+	err = a.repo.CreateSession(ctx, user.ID)
+	if err != nil {
+		a.log.Info(err)
+		return nil, err
+	}
+
 	return user, nil
 }
 
@@ -102,7 +109,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 		ExpiresAt:    time.Now().Add(a.refreshTokenTTL),
 	}
 
-	if err := a.repo.SetSession(ctx, &session); err != nil {
+	if err := a.repo.UpdateSession(ctx, &session); err != nil {
 		return &v1.Tokens{}, err
 	}
 
