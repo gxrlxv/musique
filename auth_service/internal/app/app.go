@@ -36,7 +36,7 @@ func Run() {
 
 	hasher := hash.NewSHA1Hasher("salt")
 
-	manager, err := auth.NewManager("salt")
+	manager, err := auth.NewManager(cfg.JWT.SigningKey)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
