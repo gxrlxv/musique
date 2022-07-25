@@ -48,15 +48,15 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 	}
 
 	if _, err := a.repo.GetByEmail(ctx, dto.Email); err == nil {
-		return &domain.User{}, err
+		return &domain.User{}, fmt.Errorf("user with email: %s already exist", dto.Email)
 	}
 
 	if _, err := a.repo.GetByUsername(ctx, dto.Username); err == nil {
-		return &domain.User{}, err
+		return &domain.User{}, fmt.Errorf("user with username: %s already exist", dto.Username)
 	}
 
 	if _, err := a.repo.GetByPhone(ctx, dto.Phone); err == nil {
-		return &domain.User{}, err
+		return &domain.User{}, fmt.Errorf("user with pnone number: %s already exist", dto.Phone)
 	}
 	a.log.Info("hash password")
 	passwordHash, err := a.hasher.Hash(dto.Password)

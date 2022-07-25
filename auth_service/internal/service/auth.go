@@ -50,7 +50,7 @@ func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 
 	user, err := a.uc.SignUp(ctx, userDTO)
 	if err != nil {
-		return &v1.SignUpReply{}, nil
+		return &v1.SignUpReply{}, err
 	}
 
 	tokens, err := a.uc.NewTokens(ctx, user.ID, user.Role)
