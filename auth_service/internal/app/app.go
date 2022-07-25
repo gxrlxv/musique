@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"flag"
 	v1 "github.com/gxrlxv/musique/auth_service/api/auth/v1"
 	"github.com/gxrlxv/musique/auth_service/internal/config"
 	"github.com/gxrlxv/musique/auth_service/internal/repository"
@@ -14,12 +13,6 @@ import (
 	"github.com/gxrlxv/musique/auth_service/pkg/logging"
 	"google.golang.org/grpc"
 	"net"
-)
-
-var (
-	// command-line options:
-	// gRPC server endpoint
-	grpcServerEndpoint = flag.String("grpc-server-endpoint", "localhost:8080", "gRPC server endpoint")
 )
 
 func Run() {
