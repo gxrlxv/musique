@@ -30,6 +30,10 @@ func NewAuthService(useCase AuthUseCase, log *logging.Logger) *AuthService {
 }
 
 func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.SignUpReply, error) {
+	err := in.Validate()
+	if err != nil {
+		return &v1.SignUpReply{}, err
+	}
 	a.log.Info("signUp service")
 	userDTO := domain.CreateUserDTO{
 		Username:       in.Username,
@@ -51,7 +55,7 @@ func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 
 	tokens, err := a.uc.NewTokens(ctx, user.ID, user.Role)
 	if err != nil {
-		return nil, err
+		return &v1.SignUpReply{}, err
 	}
 
 	return &v1.SignUpReply{
@@ -63,12 +67,12 @@ func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 func (a *AuthService) SignIn(ctx context.Context, in *v1.SignInRequest) (*v1.SignInReply, error) {
 	user, err := a.uc.SignIn(ctx, in.Email, in.Password)
 	if err != nil {
-		return nil, err
+		return &v1.SignInReply{}, err
 	}
 
 	tokens, err := a.uc.NewTokens(ctx, user.ID, user.Role)
 	if err != nil {
-		return nil, err
+		return &v1.SignInReply{}, err
 	}
 
 	return &v1.SignInReply{
@@ -80,12 +84,12 @@ func (a *AuthService) SignIn(ctx context.Context, in *v1.SignInRequest) (*v1.Sig
 func (a *AuthService) RefreshToken(ctx context.Context, in *v1.RefreshTokenRequest) (*v1.RefreshTokenReply, error) {
 	userId, err := a.uc.GetIdFromRefresh(ctx, in.RefreshToken)
 	if err != nil {
-		return nil, err
+		return &v1.RefreshTokenReply{}, err
 	}
 
 	tokens, err := a.uc.NewTokens(ctx, userId, "")
 	if err != nil {
-		return nil, err
+		return &v1.RefreshTokenReply{}, err
 	}
 
 	return &v1.RefreshTokenReply{Tokens: tokens}, nil

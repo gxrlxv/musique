@@ -44,24 +44,24 @@ func NewAuthUseCase(repository AuthRepository, hasher hash.PasswordHasher, token
 func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*domain.User, error) {
 	a.log.Info("signUp use case")
 	if dto.Password != dto.RepeatPassword {
-		return nil, fmt.Errorf("password don't match")
+		return &domain.User{}, fmt.Errorf("password don't match")
 	}
 
 	if _, err := a.repo.GetByEmail(ctx, dto.Email); err == nil {
-		return nil, err
+		return &domain.User{}, err
 	}
 
 	if _, err := a.repo.GetByUsername(ctx, dto.Username); err == nil {
-		return nil, err
+		return &domain.User{}, err
 	}
 
 	if _, err := a.repo.GetByPhone(ctx, dto.Phone); err == nil {
-		return nil, err
+		return &domain.User{}, err
 	}
 	a.log.Info("hash password")
 	passwordHash, err := a.hasher.Hash(dto.Password)
 	if err != nil {
-		return nil, err
+		return &domain.User{}, err
 	}
 
 	model := domain.NewUser(dto, passwordHash)
@@ -69,13 +69,13 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 	user, err := a.repo.Create(ctx, model)
 	if err != nil {
 		a.log.Info(err)
-		return nil, err
+		return &domain.User{}, err
 	}
 
 	err = a.repo.CreateSession(ctx, user.ID)
 	if err != nil {
 		a.log.Info(err)
-		return nil, err
+		return &domain.User{}, err
 	}
 
 	return user, nil
