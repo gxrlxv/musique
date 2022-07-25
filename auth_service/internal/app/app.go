@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	v1 "github.com/gxrlxv/musique/auth_service/api/auth/v1"
 	"github.com/gxrlxv/musique/auth_service/internal/config"
 	"github.com/gxrlxv/musique/auth_service/internal/repository"
@@ -27,7 +28,7 @@ func Run() {
 
 	authRepo := repository.NewRepository(postgreSQLClient, log)
 
-	hasher := hash.NewSHA1Hasher("salt")
+	hasher := hash.NewSHA1Hasher(cfg.Hasher.Salt)
 
 	manager, err := auth.NewManager(cfg.JWT.SigningKey)
 	if err != nil {
@@ -42,8 +43,8 @@ func Run() {
 	log.Info("register auth service")
 	v1.RegisterAuthServer(s, srv)
 
-	log.Info("listen :8080")
-	lis, err := net.Listen("tcp", ":8080")
+	log.Infof("listen: %s", cfg.Listen.Port)
+	lis, err := net.Listen(cfg.Listen.Type, fmt.Sprintf("%s:%s", cfg.Listen.BindIP, cfg.Listen.Port))
 	if err != nil {
 		return
 	}

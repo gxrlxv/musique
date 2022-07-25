@@ -1,8 +1,9 @@
 is_debug: true
 
 listen:
-  type: port
-  port: 1234
+  type: tcp
+  bind_ip: localhost
+  port: 8080
 
 storage:
   host: localhost
@@ -14,4 +15,7 @@ storage:
 jwt:
   access_token_ttl: 15m
   refresh_token_ttl: 30m
-  signing_key: salt
+  signing_key: signing_key
+
+hasher:
+  salt: salt

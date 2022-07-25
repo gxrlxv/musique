@@ -22,6 +22,9 @@ type Config struct {
 		RefreshTokenTTL time.Duration `yaml:"refresh_token_ttl"`
 		SigningKey      string        `yaml:"signing_key"`
 	} `yaml:"jwt"`
+	Hasher struct {
+		Salt string `yaml:"salt"`
+	} `yaml:"hasher"`
 }
 
 type StorageConfig struct {
