@@ -94,7 +94,7 @@ func (a *AuthService) RefreshToken(ctx context.Context, in *v1.RefreshTokenReque
 		return &v1.RefreshTokenReply{}, err
 	}
 
-	tokens, err := a.uc.NewTokens(ctx, userId, "")
+	tokens, err := a.uc.NewTokens(ctx, userId, "user")
 	if err != nil {
 		return &v1.RefreshTokenReply{}, err
 	}

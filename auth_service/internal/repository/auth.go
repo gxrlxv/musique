@@ -143,7 +143,7 @@ func (ar *authRepository) GetIdByToken(ctx context.Context, refresh string) (str
 	ar.log.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(q)))
 
 	var userId string
-	err := ar.client.QueryRow(ctx, q, refresh).Scan(userId)
+	err := ar.client.QueryRow(ctx, q, refresh).Scan(&userId)
 	if err != nil {
 		return "", err
 	}
