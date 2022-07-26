@@ -159,10 +159,21 @@ func (m *SignUpRequest) validate(all bool) error {
 
 	var errors []error
 
-	if utf8.RuneCountInString(m.GetUsername()) < 4 {
+	if l := utf8.RuneCountInString(m.GetUsername()); l < 4 || l > 32 {
 		err := SignUpRequestValidationError{
 			field:  "Username",
-			reason: "value length must be at least 4 runes",
+			reason: "value length must be between 4 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if !_SignUpRequest_Username_Pattern.MatchString(m.GetUsername()) {
+		err := SignUpRequestValidationError{
+			field:  "Username",
+			reason: "value does not match regex pattern \"(?i)^[A-Za-z0-9_]+$\"",
 		}
 		if !all {
 			return err
@@ -204,10 +215,10 @@ func (m *SignUpRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetFirstName()) < 1 {
+	if !_SignUpRequest_FirstName_Pattern.MatchString(m.GetFirstName()) {
 		err := SignUpRequestValidationError{
 			field:  "FirstName",
-			reason: "value length must be at least 1 runes",
+			reason: "value does not match regex pattern \"(?i)^[a-zA-Z]+$\"",
 		}
 		if !all {
 			return err
@@ -215,10 +226,10 @@ func (m *SignUpRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetLastName()) < 1 {
+	if !_SignUpRequest_LastName_Pattern.MatchString(m.GetLastName()) {
 		err := SignUpRequestValidationError{
 			field:  "LastName",
-			reason: "value length must be at least 1 runes",
+			reason: "value does not match regex pattern \"(?i)^[a-zA-Z]+$\"",
 		}
 		if !all {
 			return err
@@ -226,11 +237,38 @@ func (m *SignUpRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Gender
+	if _, ok := _SignUpRequest_Gender_InLookup[m.GetGender()]; !ok {
+		err := SignUpRequestValidationError{
+			field:  "Gender",
+			reason: "value must be in list [Female Male Other]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Country
+	if !_SignUpRequest_Country_Pattern.MatchString(m.GetCountry()) {
+		err := SignUpRequestValidationError{
+			field:  "Country",
+			reason: "value does not match regex pattern \"(?i)^[a-zA-Z]+$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for City
+	if !_SignUpRequest_City_Pattern.MatchString(m.GetCity()) {
+		err := SignUpRequestValidationError{
+			field:  "City",
+			reason: "value does not match regex pattern \"(?i)^[a-zA-Z]+$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if utf8.RuneCountInString(m.GetPhone()) > 20 {
 		err := SignUpRequestValidationError{
@@ -243,10 +281,10 @@ func (m *SignUpRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if !strings.HasPrefix(m.GetPhone(), "+") {
+	if !_SignUpRequest_Phone_Pattern.MatchString(m.GetPhone()) {
 		err := SignUpRequestValidationError{
 			field:  "Phone",
-			reason: "value does not have prefix \"+\"",
+			reason: "value does not match regex pattern \"(?i)^[0-9]+$\"",
 		}
 		if !all {
 			return err
@@ -381,6 +419,24 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = SignUpRequestValidationError{}
+
+var _SignUpRequest_Username_Pattern = regexp.MustCompile("(?i)^[A-Za-z0-9_]+$")
+
+var _SignUpRequest_FirstName_Pattern = regexp.MustCompile("(?i)^[a-zA-Z]+$")
+
+var _SignUpRequest_LastName_Pattern = regexp.MustCompile("(?i)^[a-zA-Z]+$")
+
+var _SignUpRequest_Gender_InLookup = map[string]struct{}{
+	"Female": {},
+	"Male":   {},
+	"Other":  {},
+}
+
+var _SignUpRequest_Country_Pattern = regexp.MustCompile("(?i)^[a-zA-Z]+$")
+
+var _SignUpRequest_City_Pattern = regexp.MustCompile("(?i)^[a-zA-Z]+$")
+
+var _SignUpRequest_Phone_Pattern = regexp.MustCompile("(?i)^[0-9]+$")
 
 // Validate checks the field values on SignUpReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first

@@ -30,11 +30,12 @@ func NewAuthService(useCase AuthUseCase, log *logging.Logger) *AuthService {
 }
 
 func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.SignUpReply, error) {
+	a.log.Info("signUp service")
 	err := in.Validate()
 	if err != nil {
 		return &v1.SignUpReply{}, err
 	}
-	a.log.Info("signUp service")
+
 	userDTO := domain.CreateUserDTO{
 		Username:       in.Username,
 		Email:          in.Email,
@@ -65,6 +66,12 @@ func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 }
 
 func (a *AuthService) SignIn(ctx context.Context, in *v1.SignInRequest) (*v1.SignInReply, error) {
+	a.log.Info("signIn service")
+	err := in.Validate()
+	if err != nil {
+		return &v1.SignInReply{}, err
+	}
+
 	user, err := a.uc.SignIn(ctx, in.Email, in.Password)
 	if err != nil {
 		return &v1.SignInReply{}, err
