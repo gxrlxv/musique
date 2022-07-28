@@ -6,7 +6,7 @@ import (
 	"github.com/gxrlxv/musique/auth_service/internal/domain"
 	"github.com/gxrlxv/musique/auth_service/pkg/auth"
 	"github.com/gxrlxv/musique/auth_service/pkg/hash"
-	"github.com/gxrlxv/musique/auth_service/pkg/logging"
+	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -24,12 +24,12 @@ type authUseCase struct {
 	repo            AuthRepository
 	hasher          hash.PasswordHasher
 	tokenManager    auth.Manager
-	log             *logging.Logger
+	log             *logrus.Logger
 	accessTokenTTL  time.Duration
 	refreshTokenTTL time.Duration
 }
 
-func NewAuthUseCase(repository AuthRepository, hasher hash.PasswordHasher, tokenManager auth.Manager, log *logging.Logger,
+func NewAuthUseCase(repository AuthRepository, hasher hash.PasswordHasher, tokenManager auth.Manager, log *logrus.Logger,
 	accessTokenTTL time.Duration, refreshTokenTTL time.Duration) *authUseCase {
 	return &authUseCase{
 		repo:            repository,
@@ -46,15 +46,15 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 		return &domain.User{}, ErrPasswordDontMatch
 	}
 
-	if _, err := a.repo.GetByEmail(ctx, dto.Email); err == nil {
+	if u, _ := a.repo.GetByEmail(ctx, dto.Email); u.Email == dto.Email {
 		return &domain.User{}, ErrUserAlreadyExistEmail
 	}
 
-	if _, err := a.repo.GetByUsername(ctx, dto.Username); err == nil {
+	if u, _ := a.repo.GetByUsername(ctx, dto.Username); u.Username == dto.Username {
 		return &domain.User{}, ErrUserAlreadyExistUsername
 	}
 
-	if _, err := a.repo.GetByPhone(ctx, dto.Phone); err == nil {
+	if u, _ := a.repo.GetByPhone(ctx, dto.Phone); u.Phone == dto.Phone {
 		return &domain.User{}, ErrUserAlreadyExistPhone
 	}
 	a.log.Info("hash password")
