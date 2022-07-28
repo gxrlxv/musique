@@ -2,8 +2,6 @@ package app
 
 import (
 	"context"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	v1 "github.com/gxrlxv/musique/auth_service/api/auth/v1"
 	"github.com/gxrlxv/musique/auth_service/internal/config"
 	"github.com/gxrlxv/musique/auth_service/internal/repository"
 	"github.com/gxrlxv/musique/auth_service/internal/server"
@@ -14,8 +12,6 @@ import (
 	"github.com/gxrlxv/musique/auth_service/pkg/hash"
 	"github.com/gxrlxv/musique/auth_service/pkg/logging"
 	"golang.org/x/sync/errgroup"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"net"
 	"net/http"
 )
@@ -42,21 +38,15 @@ func Run() {
 	authUseCase := usecase.NewAuthUseCase(authRepo, hasher, *manager, log, cfg.JWT.AccessTokenTTL, cfg.JWT.RefreshTokenTTL)
 
 	authService := service.NewAuthService(authUseCase, log)
-	log.Info("new grpc server")
+
 	grpcServer := server.NewGRPCServer(authService, log)
 
 	listen, err := net.Listen("tcp", cfg.Server.Grpc.Addr)
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 
-	mux := runtime.NewServeMux()
-
-	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	err = v1.RegisterAuthHandlerFromEndpoint(context.Background(), mux, cfg.Server.Grpc.Addr, opts)
-	if err != nil {
-		panic(err)
-	}
+	mux := server.NewHTTPServer(cfg.Server.Grpc.Addr, log)
 
 	g, _ := errgroup.WithContext(context.Background())
 	g.Go(func() (err error) {
@@ -68,6 +58,6 @@ func Run() {
 
 	err = g.Wait()
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 }

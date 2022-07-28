@@ -11,6 +11,7 @@ import (
 )
 
 func NewGRPCServer(auth *service.AuthService, logger *logrus.Logger) *grpc.Server {
+	logger.Info("new grpc server")
 	log := logrus.NewEntry(logger)
 	grpc.NewServer()
 	var opts = []grpc.ServerOption{
