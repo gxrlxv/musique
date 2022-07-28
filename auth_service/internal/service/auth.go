@@ -4,7 +4,7 @@ import (
 	"context"
 	v1 "github.com/gxrlxv/musique/auth_service/api/auth/v1"
 	"github.com/gxrlxv/musique/auth_service/internal/domain"
-	"github.com/gxrlxv/musique/auth_service/pkg/logging"
+	"github.com/sirupsen/logrus"
 )
 
 type AuthUseCase interface {
@@ -18,10 +18,10 @@ type AuthUseCase interface {
 type AuthService struct {
 	v1.UnimplementedAuthServer
 	uc  AuthUseCase
-	log *logging.Logger
+	log *logrus.Logger
 }
 
-func NewAuthService(useCase AuthUseCase, log *logging.Logger) *AuthService {
+func NewAuthService(useCase AuthUseCase, log *logrus.Logger) *AuthService {
 	return &AuthService{
 		UnimplementedAuthServer: v1.UnimplementedAuthServer{},
 		uc:                      useCase,

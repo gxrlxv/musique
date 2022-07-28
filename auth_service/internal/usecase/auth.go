@@ -47,19 +47,23 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 	}
 
 	if u, _ := a.repo.GetByEmail(ctx, dto.Email); u.Email == dto.Email {
+		a.log.Error(ErrUserAlreadyExistEmail)
 		return &domain.User{}, ErrUserAlreadyExistEmail
 	}
 
 	if u, _ := a.repo.GetByUsername(ctx, dto.Username); u.Username == dto.Username {
+		a.log.Error(ErrUserAlreadyExistUsername)
 		return &domain.User{}, ErrUserAlreadyExistUsername
 	}
 
 	if u, _ := a.repo.GetByPhone(ctx, dto.Phone); u.Phone == dto.Phone {
+		a.log.Error(ErrUserAlreadyExistPhone)
 		return &domain.User{}, ErrUserAlreadyExistPhone
 	}
 	a.log.Info("hash password")
 	passwordHash, err := a.hasher.Hash(dto.Password)
 	if err != nil {
+		a.log.Error(err)
 		return &domain.User{}, internalErr(err)
 	}
 
@@ -67,13 +71,13 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 
 	user, err := a.repo.Create(ctx, model)
 	if err != nil {
-		a.log.Info(err)
+		a.log.Error(err)
 		return &domain.User{}, internalErr(err)
 	}
 
 	err = a.repo.CreateSession(ctx, user.ID)
 	if err != nil {
-		a.log.Info(err)
+		a.log.Error(err)
 		return &domain.User{}, internalErr(err)
 	}
 
@@ -81,17 +85,21 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 }
 
 func (a *authUseCase) SignIn(ctx context.Context, email, password string) (*domain.User, error) {
+	a.log.Info("signIn use case")
 	user, err := a.repo.GetByEmail(ctx, email)
 	if err != nil {
+		a.log.Error(ErrUserNotFoundEmail)
 		return &domain.User{}, ErrUserNotFoundEmail
 	}
 
 	passwordHash, err := a.hasher.Hash(password)
 	if err != nil {
+		a.log.Error(err)
 		return &domain.User{}, internalErr(err)
 	}
 
 	if user.PasswordHash != passwordHash {
+		a.log.Error(ErrPasswordInvalid)
 		return &domain.User{}, ErrPasswordInvalid
 	}
 
@@ -99,13 +107,16 @@ func (a *authUseCase) SignIn(ctx context.Context, email, password string) (*doma
 }
 
 func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error) {
+	a.log.Info("NewTokens use case")
 	refresh, err := a.tokenManager.NewRefreshToken()
 	if err != nil {
+		a.log.Error(err)
 		return &v1.Tokens{}, internalErr(err)
 	}
 
 	access, err := a.tokenManager.NewJWT(userId, role, a.accessTokenTTL)
 	if err != nil {
+		a.log.Error(err)
 		return &v1.Tokens{}, internalErr(err)
 	}
 
@@ -116,6 +127,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 	}
 
 	if err := a.repo.UpdateSession(ctx, &session); err != nil {
+		a.log.Error(err)
 		return &v1.Tokens{}, internalErr(err)
 	}
 
@@ -123,9 +135,10 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 }
 
 func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (string, error) {
-
+	a.log.Info("GetIdFromRefresh use case")
 	userId, err := a.repo.GetIdByToken(ctx, refresh)
 	if err != nil {
+		a.log.Error(ErrTokenInvalid)
 		return "", ErrTokenInvalid
 	}
 
@@ -133,8 +146,10 @@ func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (str
 }
 
 func (a *authUseCase) Identify(ctx context.Context, access string) (string, error) {
+	a.log.Info("Identify use case")
 	userID, err := a.tokenManager.Parse(access)
 	if err != nil {
+		a.log.Error(ErrTokenInvalid)
 		return "", ErrTokenInvalid
 	}
 
