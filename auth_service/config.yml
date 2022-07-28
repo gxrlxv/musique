@@ -1,9 +1,10 @@
 is_debug: true
 
-listen:
-  type: tcp
-  bind_ip: localhost
-  port: 8080
+server:
+  http:
+    addr: 0.0.0.0:8081
+  grpc:
+    addr: 0.0.0.0:8082
 
 storage:
   host: localhost
