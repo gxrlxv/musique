@@ -14,7 +14,7 @@ type authRepository struct {
 	log    *logrus.Logger
 }
 
-func NewRepository(client postgresql.Client, log *logrus.Logger) *authRepository {
+func NewAuthRepository(client postgresql.Client, log *logrus.Logger) *authRepository {
 	return &authRepository{
 		client: client,
 		log:    log,

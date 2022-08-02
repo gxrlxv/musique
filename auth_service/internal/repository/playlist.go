@@ -18,7 +18,18 @@ func NewPlaylistRepository(client postgresql.Client, log *logrus.Logger) *playli
 	}
 }
 
-func (pr *playlistRepository) Create(ctx context.Context, userId, title string) {
-	//TODO implement me
-	panic("implement me")
+func (pr *playlistRepository) Create(ctx context.Context, userId string) error {
+	q := `
+			INSERT INTO public.playlist
+				(user_id)
+			VALUES
+				($1)`
+
+	_, err := pr.client.Exec(ctx, q, userId)
+	if err != nil {
+		pr.log.Error(err)
+		return err
+	}
+
+	return nil
 }

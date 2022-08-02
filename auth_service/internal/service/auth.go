@@ -60,6 +60,11 @@ func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 		return &v1.SignUpReply{}, err
 	}
 
+	err = a.uc.NewPlaylist(ctx, user.ID)
+	if err != nil {
+		return &v1.SignUpReply{}, err
+	}
+
 	return &v1.SignUpReply{
 		Id:     user.ID,
 		Tokens: tokens,
