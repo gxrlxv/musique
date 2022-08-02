@@ -13,6 +13,7 @@ type AuthUseCase interface {
 	NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error)
 	GetIdFromRefresh(ctx context.Context, refresh string) (string, error)
 	Identify(ctx context.Context, access string) (string, error)
+	NewPlaylist(ctx context.Context, userId string) error
 }
 
 type AuthService struct {

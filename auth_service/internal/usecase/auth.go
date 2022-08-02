@@ -21,7 +21,8 @@ type AuthRepository interface {
 }
 
 type authUseCase struct {
-	repo            AuthRepository
+	authRepo        AuthRepository
+	playlistRepo    PlaylistRepository
 	hasher          hash.PasswordHasher
 	tokenManager    auth.Manager
 	log             *logrus.Logger
@@ -29,15 +30,17 @@ type authUseCase struct {
 	refreshTokenTTL time.Duration
 }
 
-func NewAuthUseCase(repository AuthRepository, hasher hash.PasswordHasher, tokenManager auth.Manager, log *logrus.Logger,
+func NewAuthUseCase(authRepo AuthRepository, playlistRepo PlaylistRepository, hasher hash.PasswordHasher, tokenManager auth.Manager, log *logrus.Logger,
 	accessTokenTTL time.Duration, refreshTokenTTL time.Duration) *authUseCase {
 	return &authUseCase{
-		repo:            repository,
+		authRepo:        authRepo,
+		playlistRepo:    playlistRepo,
 		hasher:          hasher,
 		tokenManager:    tokenManager,
 		log:             log,
 		accessTokenTTL:  accessTokenTTL,
-		refreshTokenTTL: refreshTokenTTL}
+		refreshTokenTTL: refreshTokenTTL,
+	}
 }
 
 func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*domain.User, error) {
@@ -46,17 +49,17 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 		return &domain.User{}, ErrPasswordDontMatch
 	}
 
-	if u, _ := a.repo.GetByEmail(ctx, dto.Email); u.Email == dto.Email {
+	if u, _ := a.authRepo.GetByEmail(ctx, dto.Email); u.Email == dto.Email {
 		a.log.Error(ErrUserAlreadyExistEmail)
 		return &domain.User{}, ErrUserAlreadyExistEmail
 	}
 
-	if u, _ := a.repo.GetByUsername(ctx, dto.Username); u.Username == dto.Username {
+	if u, _ := a.authRepo.GetByUsername(ctx, dto.Username); u.Username == dto.Username {
 		a.log.Error(ErrUserAlreadyExistUsername)
 		return &domain.User{}, ErrUserAlreadyExistUsername
 	}
 
-	if u, _ := a.repo.GetByPhone(ctx, dto.Phone); u.Phone == dto.Phone {
+	if u, _ := a.authRepo.GetByPhone(ctx, dto.Phone); u.Phone == dto.Phone {
 		a.log.Error(ErrUserAlreadyExistPhone)
 		return &domain.User{}, ErrUserAlreadyExistPhone
 	}
@@ -69,13 +72,13 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 
 	model := domain.NewUser(dto, passwordHash)
 
-	user, err := a.repo.Create(ctx, model)
+	user, err := a.authRepo.Create(ctx, model)
 	if err != nil {
 		a.log.Error(err)
 		return &domain.User{}, internalErr(err)
 	}
 
-	err = a.repo.CreateSession(ctx, user.ID)
+	err = a.authRepo.CreateSession(ctx, user.ID)
 	if err != nil {
 		a.log.Error(err)
 		return &domain.User{}, internalErr(err)
@@ -86,7 +89,7 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 
 func (a *authUseCase) SignIn(ctx context.Context, email, password string) (*domain.User, error) {
 	a.log.Info("signIn use case")
-	user, err := a.repo.GetByEmail(ctx, email)
+	user, err := a.authRepo.GetByEmail(ctx, email)
 	if err != nil {
 		a.log.Error(ErrUserNotFoundEmail)
 		return &domain.User{}, ErrUserNotFoundEmail
@@ -126,7 +129,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 		ExpiresAt:    time.Now().Add(a.refreshTokenTTL),
 	}
 
-	if err := a.repo.UpdateSession(ctx, &session); err != nil {
+	if err := a.authRepo.UpdateSession(ctx, &session); err != nil {
 		a.log.Error(err)
 		return &v1.Tokens{}, internalErr(err)
 	}
@@ -136,7 +139,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 
 func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (string, error) {
 	a.log.Info("GetIdFromRefresh use case")
-	userId, err := a.repo.GetIdByToken(ctx, refresh)
+	userId, err := a.authRepo.GetIdByToken(ctx, refresh)
 	if err != nil {
 		a.log.Error(ErrTokenInvalid)
 		return "", ErrTokenInvalid
