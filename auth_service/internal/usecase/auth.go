@@ -123,13 +123,9 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 		return &v1.Tokens{}, internalErr(err)
 	}
 
-	session := domain.Session{
-		UserId:       userId,
-		RefreshToken: refresh,
-		ExpiresAt:    time.Now().Add(a.refreshTokenTTL),
-	}
+	session := domain.NewSession(userId, refresh, a.refreshTokenTTL)
 
-	if err := a.authRepo.UpdateSession(ctx, &session); err != nil {
+	if err := a.authRepo.UpdateSession(ctx, session); err != nil {
 		a.log.Error(err)
 		return &v1.Tokens{}, internalErr(err)
 	}
