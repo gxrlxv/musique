@@ -14,6 +14,7 @@ type AuthUseCase interface {
 	GetIdFromRefresh(ctx context.Context, refresh string) (string, error)
 	Identify(ctx context.Context, access string) (string, error)
 	NewPlaylist(ctx context.Context, userId string) error
+	NewSubscription(ctx context.Context, userId string) error
 }
 
 type AuthService struct {
@@ -64,6 +65,8 @@ func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 	if err != nil {
 		return &v1.SignUpReply{}, err
 	}
+
+	err = a.uc.NewSubscription(ctx, user.ID)
 
 	return &v1.SignUpReply{
 		Id:     user.ID,

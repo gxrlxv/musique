@@ -21,25 +21,27 @@ type AuthRepository interface {
 }
 
 type authUseCase struct {
-	authRepo        AuthRepository
-	playlistRepo    PlaylistRepository
-	hasher          hash.PasswordHasher
-	tokenManager    auth.Manager
-	log             *logrus.Logger
-	accessTokenTTL  time.Duration
-	refreshTokenTTL time.Duration
+	authRepo         AuthRepository
+	playlistRepo     PlaylistRepository
+	subscriptionRepo SubscriptionRepository
+	hasher           hash.PasswordHasher
+	tokenManager     auth.Manager
+	log              *logrus.Logger
+	accessTokenTTL   time.Duration
+	refreshTokenTTL  time.Duration
 }
 
-func NewAuthUseCase(authRepo AuthRepository, playlistRepo PlaylistRepository, hasher hash.PasswordHasher, tokenManager auth.Manager, log *logrus.Logger,
+func NewAuthUseCase(authRepo AuthRepository, playlistRepo PlaylistRepository, subscriptionRepo SubscriptionRepository, hasher hash.PasswordHasher, tokenManager auth.Manager, log *logrus.Logger,
 	accessTokenTTL time.Duration, refreshTokenTTL time.Duration) *authUseCase {
 	return &authUseCase{
-		authRepo:        authRepo,
-		playlistRepo:    playlistRepo,
-		hasher:          hasher,
-		tokenManager:    tokenManager,
-		log:             log,
-		accessTokenTTL:  accessTokenTTL,
-		refreshTokenTTL: refreshTokenTTL,
+		authRepo:         authRepo,
+		playlistRepo:     playlistRepo,
+		subscriptionRepo: subscriptionRepo,
+		hasher:           hasher,
+		tokenManager:     tokenManager,
+		log:              log,
+		accessTokenTTL:   accessTokenTTL,
+		refreshTokenTTL:  refreshTokenTTL,
 	}
 }
 
