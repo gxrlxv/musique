@@ -9,11 +9,11 @@ type Subscription struct {
 	EndDate        time.Time `json:"end_date"`
 }
 
-func NewSubscription(userId string) *subscription {
-	return &subscription{
-		userId:         userId,
-		subscriptionId: 0,
-		startDate:      time.Now(),
-		endDate:        time.Now(),
+func NewSubscription(userId string, subId int, duration time.Duration) *Subscription {
+	return &Subscription{
+		UserId:         userId,
+		SubscriptionId: subId,
+		StartDate:      time.Now(),
+		EndDate:        time.Now().Add(duration),
 	}
 }

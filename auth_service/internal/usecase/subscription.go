@@ -6,19 +6,24 @@ import (
 	"time"
 )
 
+var freeSubId = 1
+
 type SubscriptionRepository interface {
 	CreateSubscription(ctx context.Context, subscription *domain.Subscription) error
-	GetBySubscriptionId(ctx context.Context, id int) (error, time.Duration)
+	GetBySubscriptionId(ctx context.Context, id int) (time.Duration, error)
 }
 
 func (a *authUseCase) NewSubscription(ctx context.Context, userId string) error {
 	a.log.Info("New Subscription use case")
 
-	err, subDuration :=
+	subDuration, err := a.subscriptionRepo.GetBySubscriptionId(ctx, freeSubId)
+	if err != nil {
+		return err
+	}
 
-		domain.NewSubscription(userid)
+	subscription := domain.NewSubscription(userId, freeSubId, subDuration)
 
-	err := a.subscriptionRepo.CreateSubscription(ctx, subscription)
+	err = a.subscriptionRepo.CreateSubscription(ctx, subscription)
 	if err != nil {
 		return err
 	}

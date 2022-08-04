@@ -67,6 +67,9 @@ func (a *AuthService) SignUp(ctx context.Context, in *v1.SignUpRequest) (*v1.Sig
 	}
 
 	err = a.uc.NewSubscription(ctx, user.ID)
+	if err != nil {
+		return &v1.SignUpReply{}, err
+	}
 
 	return &v1.SignUpReply{
 		Id:     user.ID,

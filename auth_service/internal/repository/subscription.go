@@ -13,8 +13,8 @@ type subscriptionRepository struct {
 	log    *logrus.Logger
 }
 
-func NewSubscriptionRepository(client postgresql.Client, log *logrus.Logger) *playlistRepository {
-	return &playlistRepository{
+func NewSubscriptionRepository(client postgresql.Client, log *logrus.Logger) *subscriptionRepository {
+	return &subscriptionRepository{
 		client: client,
 		log:    log,
 	}
@@ -36,6 +36,19 @@ func (sr *subscriptionRepository) CreateSubscription(ctx context.Context, subscr
 	return nil
 }
 
-func (sr *subscriptionRepository) GetBySubscriptionId(ctx context.Context, id int) (error, time.Duration) {
-	panic("implement me")
+func (sr *subscriptionRepository) GetBySubscriptionId(ctx context.Context, id int) (time.Duration, error) {
+	q := `
+		SELECT duration 
+		FROM public.subscription 
+		WHERE id = $1
+	`
+
+	var duration time.Duration
+	err := sr.client.QueryRow(ctx, q, id).Scan(&duration)
+	if err != nil {
+		sr.log.Error(err)
+		return 0, err
+	}
+
+	return duration, nil
 }

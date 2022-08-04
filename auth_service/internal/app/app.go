@@ -30,6 +30,8 @@ func Run() {
 
 	playlistRepo := repository.NewPlaylistRepository(postgreSQLClient, log)
 
+	subRepo := repository.NewSubscriptionRepository(postgreSQLClient, log)
+
 	hasher := hash.NewSHA1Hasher(cfg.Hasher.Salt)
 
 	manager, err := auth.NewManager(cfg.JWT.SigningKey)
@@ -37,7 +39,7 @@ func Run() {
 		log.Fatalf("%v", err)
 	}
 
-	authUseCase := usecase.NewAuthUseCase(authRepo, playlistRepo, hasher, *manager, log, cfg.JWT.AccessTokenTTL, cfg.JWT.RefreshTokenTTL)
+	authUseCase := usecase.NewAuthUseCase(authRepo, playlistRepo, subRepo, hasher, *manager, log, cfg.JWT.AccessTokenTTL, cfg.JWT.RefreshTokenTTL)
 
 	authService := service.NewAuthService(authUseCase, log)
 
