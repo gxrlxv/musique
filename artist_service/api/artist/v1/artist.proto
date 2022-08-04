@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package api.artist.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/gxrlxv/musique/artist_service/api/artist/v1";
+
+
+// The auth service definition.
+service Artist{
+  rpc CreateAlbum(CreateAlbumRequest) returns(CreateAlbumReply){
+    option (google.api.http) = {
+      post: "/artist/albums"
+      body: "*"
+    };
+  };
+
+  rpc DeleteAlbum(DeleteAlbumRequest) returns(DeleteAlbumReply){
+    option (google.api.http) = {
+      delete: "/artist/albums/{album_id}"
+    };
+  };
+}
+
+message CreateAlbumRequest{
+  string album_title = 1;
+  string release_year = 2;
+  string artist_name = 3;
+  string genre_title = 4;
+  int64 milliseconds = 5;
+  int64 bytes = 6;
+}
+
+message CreateAlbumReply{
+  string track_id = 1;
+}
+
+message DeleteAlbumRequest{
+  string album_id = 1;
+}
+
+message DeleteAlbumReply{
+  string album_id = 1;
+}
+
