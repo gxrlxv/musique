@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  auth:
+    build: auth_service/
+    command: ./auth
+    container_name: auth
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    depends_on:
+      - postgres
+
+
+  postgres:
+    container_name: postgres
+    image: postgres:13.3
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
+      - /var/run/postgresql:/var/run/postgresql
+    environment:
+      POSTGRES_DB: musiqueDB
+      POSTGRES_USER: gxrlxv
+      POSTGRES_PASSWORD: qwerty
+    ports:
+      - "5432:5432"
+

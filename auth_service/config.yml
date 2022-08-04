@@ -2,12 +2,12 @@ is_debug: true
 
 server:
   http:
-    addr: 0.0.0.0:8081
+    addr: 0.0.0.0:8000
   grpc:
-    addr: 0.0.0.0:8082
+    addr: 0.0.0.0:9000
 
 storage:
-  host: localhost
+  host: postgres
   port: 5432
   database: musiqueDB
   username: gxrlxv
