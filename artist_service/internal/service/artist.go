@@ -28,16 +28,32 @@ func NewArtistService(useCase ArtistUseCase, log *logrus.Logger) *ArtistService 
 
 func (as *ArtistService) CreateAlbum(ctx context.Context, in *v1.CreateAlbumRequest) (*v1.CreateAlbumReply, error) {
 
+	var tracksDTO []*domain.CreateTrackDTO
+
+	for i := range in.Tracks {
+		trackDTO := domain.CreateTrackDTO{
+			Title:        in.Tracks[i].Title,
+			Genre:        in.Tracks[i].Genre,
+			Milliseconds: in.Tracks[i].Milliseconds,
+			Bytes:        in.Tracks[i].Bytes,
+		}
+
+		tracksDTO = append(tracksDTO, &trackDTO)
+	}
+
 	albumDTO := domain.CreateAlbumDTO{
-		Title:       in.AlbumTitle,
-		ReleaseYear: in.ReleaseYear,
-		ArtistName:  in.ArtistName,
+		Title:        in.AlbumTitle,
+		ReleaseYear:  in.ReleaseYear,
+		ArtistName:   in.ArtistName,
+		NumberTracks: len(in.Tracks),
+		Tracks:       tracksDTO,
 	}
 
 	err := as.uc.CreateAlbum(ctx, albumDTO)
 	if err != nil {
-		return nil, err
+		return &v1.CreateAlbumReply{}, err
 	}
+
 	return &v1.CreateAlbumReply{
 		TrackId: "",
 	}, nil
@@ -47,7 +63,7 @@ func (as *ArtistService) DeleteAlbum(ctx context.Context, in *v1.DeleteAlbumRequ
 
 	err := as.uc.DeleteAlbum(ctx, in.AlbumId)
 	if err != nil {
-		return nil, err
+		return &v1.DeleteAlbumReply{}, err
 	}
 
 	return &v1.DeleteAlbumReply{

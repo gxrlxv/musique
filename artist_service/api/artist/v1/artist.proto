@@ -23,13 +23,18 @@ service Artist{
   };
 }
 
+message Track {
+  string title = 1;
+  string genre = 2;
+  int64 milliseconds = 3;
+  int64 bytes = 4;
+}
+
 message CreateAlbumRequest{
   string album_title = 1;
   string release_year = 2;
   string artist_name = 3;
-  string genre_title = 4;
-  int64 milliseconds = 5;
-  int64 bytes = 6;
+  repeated Track tracks = 4;
 }
 
 message CreateAlbumReply{

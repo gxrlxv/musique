@@ -26,7 +26,13 @@ func Run() {
 
 	albumRepo := repository.NewAlbumRepository(postgreSQLClient, log)
 
-	albumUseCase := usecase.NewAlbumUseCase(albumRepo, log)
+	trackRepo := repository.NewTrackRepository(postgreSQLClient, log)
+
+	genreRepo := repository.NewGenreRepository(postgreSQLClient, log)
+
+	artistRepo := repository.NewArtistRepository(postgreSQLClient, log)
+
+	albumUseCase := usecase.NewAlbumUseCase(albumRepo, trackRepo, genreRepo, artistRepo, log)
 
 	artistService := service.NewArtistService(albumUseCase, log)
 

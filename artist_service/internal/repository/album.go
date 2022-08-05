@@ -19,12 +19,12 @@ func NewAlbumRepository(client postgresql.Client, log *logrus.Logger) *albumRepo
 	}
 }
 
-func (albumRepository) CreateAlbum(ctx context.Context, album domain.Album) error {
+func (ar *albumRepository) CreateAlbum(ctx context.Context, album *domain.Album) (string, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (albumRepository) DeleteAlbum(ctx context.Context, albumId string) error {
+func (ar *albumRepository) DeleteAlbum(ctx context.Context, albumId string) error {
 	//TODO implement me
 	panic("implement me")
 }
