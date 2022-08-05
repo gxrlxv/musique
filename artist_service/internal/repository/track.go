@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"github.com/gxrlxv/musique/artist_service/internal/domain"
-	"github.com/gxrlxv/musique/pkg/client/postgresql"
+	"github.com/gxrlxv/musique/artist_service/pkg/client/postgresql"
 	"github.com/sirupsen/logrus"
 )
 
