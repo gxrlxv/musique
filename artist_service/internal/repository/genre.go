@@ -18,7 +18,19 @@ func NewGenreRepository(client postgresql.Client, log *logrus.Logger) *genreRepo
 	}
 }
 
-func (genreRepository) GetByTitle(ctx context.Context, title string) (int, error) {
-	//TODO implement me
-	panic("implement me")
+func (gr *genreRepository) GetByTitle(ctx context.Context, title string) (int, error) {
+	q := `
+		SELECT id
+		FROM public.genre
+		WHERE title = $1
+	`
+
+	var genreId int
+	err := gr.client.QueryRow(ctx, q, title).Scan(&genreId)
+	if err != nil {
+		gr.log.Error(err)
+		return 0, err
+	}
+
+	return genreId, nil
 }

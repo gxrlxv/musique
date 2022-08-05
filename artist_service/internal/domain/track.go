@@ -1,14 +1,14 @@
 package domain
 
 type Track struct {
-	id           string
-	title        string
-	artistId     string
-	albumId      string
-	genreId      int
-	releaseYear  string
-	milliseconds int64
-	bytes        int64
+	Id           string
+	Title        string
+	ArtistId     string
+	AlbumId      string
+	GenreId      int
+	ReleaseYear  string
+	Milliseconds int64
+	Bytes        int64
 }
 
 type CreateTrackDTO struct {
@@ -20,13 +20,13 @@ type CreateTrackDTO struct {
 
 func NewTrack(title, artistId, albumId, releaseYear string, genreId int, milliseconds, bytes int64) *Track {
 	return &Track{
-		id:           "",
-		title:        title,
-		artistId:     artistId,
-		albumId:      albumId,
-		genreId:      genreId,
-		releaseYear:  releaseYear,
-		milliseconds: milliseconds,
-		bytes:        bytes,
+		Id:           "",
+		Title:        title,
+		ArtistId:     artistId,
+		AlbumId:      albumId,
+		GenreId:      genreId,
+		ReleaseYear:  releaseYear,
+		Milliseconds: milliseconds,
+		Bytes:        bytes,
 	}
 }

@@ -19,8 +19,32 @@ func NewTrackRepository(client postgresql.Client, log *logrus.Logger) *trackRepo
 	}
 }
 
-func (trackRepository) SaveTrack(ctx context.Context, track *domain.Track) error {
+func (tr *trackRepository) SaveTrack(ctx context.Context, track *domain.Track) error {
+	q := `
+			INSERT INTO public.track
+    			(title, artist_id, album_id, genre_id, release_year, milliseconds, bytes)
+			VALUES
+    			($1,$2,$3,$4,$5,$6,$7)`
 
-	//TODO implement me
-	panic("implement me")
+	_, err := tr.client.Exec(ctx, q, track.Title, track.ArtistId, track.AlbumId, track.GenreId, track.ReleaseYear, track.Milliseconds, track.Bytes)
+	if err != nil {
+		tr.log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func (tr *trackRepository) DeleteTracks(ctx context.Context, albumId string) error {
+	q := `
+			DELETE FROM public.track
+    		WHERE album_id = $1`
+
+	_, err := tr.client.Exec(ctx, q, albumId)
+	if err != nil {
+		tr.log.Error(err)
+		return err
+	}
+
+	return nil
 }

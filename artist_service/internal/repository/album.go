@@ -20,11 +20,33 @@ func NewAlbumRepository(client postgresql.Client, log *logrus.Logger) *albumRepo
 }
 
 func (ar *albumRepository) CreateAlbum(ctx context.Context, album *domain.Album) (string, error) {
-	//TODO implement me
-	panic("implement me")
+	q := `
+			INSERT INTO public.album
+    			(title, artist_id, release_year)
+			VALUES
+    			($1,$2,$3)`
+
+	var albumId string
+
+	err := ar.client.QueryRow(ctx, q, album.Title, album.ArtistId, album.ReleaseYear).Scan(&albumId)
+	if err != nil {
+		ar.log.Error(err)
+		return "", err
+	}
+
+	return albumId, nil
 }
 
 func (ar *albumRepository) DeleteAlbum(ctx context.Context, albumId string) error {
-	//TODO implement me
-	panic("implement me")
+	q := `
+			DELETE FROM public.album
+    		WHERE id = $1`
+
+	_, err := ar.client.Exec(ctx, q, albumId)
+	if err != nil {
+		ar.log.Error(err)
+		return err
+	}
+
+	return nil
 }

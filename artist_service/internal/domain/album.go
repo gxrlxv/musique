@@ -1,10 +1,10 @@
 package domain
 
 type Album struct {
-	id          string
-	title       string
-	releaseYear string
-	artistId    string
+	Id          string
+	Title       string
+	ReleaseYear string
+	ArtistId    string
 }
 
 type CreateAlbumDTO struct {
@@ -17,9 +17,9 @@ type CreateAlbumDTO struct {
 
 func NewAlbum(title, releaseYear, artistId string) *Album {
 	return &Album{
-		id:          "",
-		title:       title,
-		releaseYear: releaseYear,
-		artistId:    artistId,
+		Id:          "",
+		Title:       title,
+		ReleaseYear: releaseYear,
+		ArtistId:    artistId,
 	}
 }

@@ -13,6 +13,7 @@ type AlbumRepository interface {
 
 type TrackRepository interface {
 	SaveTrack(ctx context.Context, track *domain.Track) error
+	DeleteTracks(ctx context.Context, albumId string) error
 }
 
 type GenreRepository interface {
@@ -72,7 +73,13 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 }
 
 func (a *albumUseCase) DeleteAlbum(ctx context.Context, albumId string) error {
-	err := a.albumRepo.DeleteAlbum(ctx, albumId)
+
+	err := a.trackRepo.DeleteTracks(ctx, albumId)
+	if err != nil {
+		return err
+	}
+
+	err = a.albumRepo.DeleteAlbum(ctx, albumId)
 	if err != nil {
 		return err
 	}
