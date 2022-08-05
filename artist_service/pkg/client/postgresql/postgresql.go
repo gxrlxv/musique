@@ -3,13 +3,13 @@ package postgresql
 import (
 	"context"
 	"fmt"
-	"github.com/gxrlxv/musique/auth_service/internal/config"
-	repeatable "github.com/gxrlxv/musique/auth_service/pkg/utils"
+	"github.com/gxrlxv/musique/artist_service/internal/config"
+	repeatable "github.com/gxrlxv/musique/artist_service/pkg/utils"
+	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgconn"
-	"github.com/jackc/pgx/v4"
 	"time"
 )
 
