@@ -24,7 +24,8 @@ func (ar *albumRepository) CreateAlbum(ctx context.Context, album *domain.Album)
 			INSERT INTO public.album
     			(title, artist_id, release_year)
 			VALUES
-    			($1,$2,$3)`
+    			($1,$2,$3)
+			RETURNING id`
 
 	var albumId string
 

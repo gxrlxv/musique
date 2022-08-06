@@ -38,7 +38,7 @@ message CreateAlbumRequest{
 }
 
 message CreateAlbumReply{
-  string track_id = 1;
+  string album_id = 1;
 }
 
 message DeleteAlbumRequest{

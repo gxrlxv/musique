@@ -8,7 +8,7 @@ import (
 )
 
 type ArtistUseCase interface {
-	CreateAlbum(ctx context.Context, album domain.CreateAlbumDTO) error
+	CreateAlbum(ctx context.Context, album domain.CreateAlbumDTO) (string, error)
 	DeleteAlbum(ctx context.Context, albumId string) error
 }
 
@@ -49,13 +49,13 @@ func (as *ArtistService) CreateAlbum(ctx context.Context, in *v1.CreateAlbumRequ
 		Tracks:       tracksDTO,
 	}
 
-	err := as.uc.CreateAlbum(ctx, albumDTO)
+	albumId, err := as.uc.CreateAlbum(ctx, albumDTO)
 	if err != nil {
 		return &v1.CreateAlbumReply{}, err
 	}
 
 	return &v1.CreateAlbumReply{
-		TrackId: "",
+		AlbumId: albumId,
 	}, nil
 }
 

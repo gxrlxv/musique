@@ -42,34 +42,34 @@ func NewAlbumUseCase(albumRepo AlbumRepository, trackRepo TrackRepository, genre
 	}
 }
 
-func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAlbumDTO) error {
+func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAlbumDTO) (string, error) {
 	artistId, err := a.artistRepo.GetByName(ctx, albumDTO.ArtistName)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	album := domain.NewAlbum(albumDTO.Title, albumDTO.ReleaseYear, artistId)
 
 	albumId, err := a.albumRepo.CreateAlbum(ctx, album)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	for i := 0; i < albumDTO.NumberTracks; i++ {
 		genreId, err := a.genreRepo.GetByTitle(ctx, albumDTO.Tracks[i].Genre)
 		if err != nil {
-			return err
+			return "", err
 		}
 
 		track := domain.NewTrack(albumDTO.Tracks[i].Title, artistId, albumId, albumDTO.ReleaseYear, genreId, albumDTO.Tracks[i].Milliseconds, albumDTO.Tracks[i].Bytes)
 
 		err = a.trackRepo.SaveTrack(ctx, track)
 		if err != nil {
-			return err
+			return "", err
 		}
 	}
 
-	return nil
+	return albumId, nil
 }
 
 func (a *albumUseCase) DeleteAlbum(ctx context.Context, albumId string) error {

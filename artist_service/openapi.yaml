@@ -60,7 +60,7 @@ components:
         CreateAlbumReply:
             type: object
             properties:
-                trackId:
+                albumId:
                     type: string
         CreateAlbumRequest:
             type: object
