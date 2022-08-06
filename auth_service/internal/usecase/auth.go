@@ -10,18 +10,22 @@ import (
 	"time"
 )
 
-type AuthRepository interface {
+type UserRepository interface {
 	Create(ctx context.Context, user *domain.User) (*domain.User, error)
 	GetByUsername(ctx context.Context, username string) (*domain.User, error)
 	GetByEmail(ctx context.Context, email string) (*domain.User, error)
 	GetByPhone(ctx context.Context, phone string) (*domain.User, error)
+}
+
+type SessionRepository interface {
 	UpdateSession(ctx context.Context, session *domain.Session) error
 	CreateSession(ctx context.Context, userID string) error
 	GetIdByToken(ctx context.Context, refresh string) (string, error)
 }
 
 type authUseCase struct {
-	authRepo         AuthRepository
+	userRepo         UserRepository
+	sessionRepo      SessionRepository
 	playlistRepo     PlaylistRepository
 	subscriptionRepo SubscriptionRepository
 	hasher           hash.PasswordHasher
@@ -31,10 +35,11 @@ type authUseCase struct {
 	refreshTokenTTL  time.Duration
 }
 
-func NewAuthUseCase(authRepo AuthRepository, playlistRepo PlaylistRepository, subscriptionRepo SubscriptionRepository, hasher hash.PasswordHasher, tokenManager auth.Manager, log *logrus.Logger,
+func NewAuthUseCase(userRepo UserRepository, sessionRepo SessionRepository, playlistRepo PlaylistRepository, subscriptionRepo SubscriptionRepository, hasher hash.PasswordHasher, tokenManager auth.Manager, log *logrus.Logger,
 	accessTokenTTL time.Duration, refreshTokenTTL time.Duration) *authUseCase {
 	return &authUseCase{
-		authRepo:         authRepo,
+		userRepo:         userRepo,
+		sessionRepo:      sessionRepo,
 		playlistRepo:     playlistRepo,
 		subscriptionRepo: subscriptionRepo,
 		hasher:           hasher,
@@ -51,17 +56,17 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 		return &domain.User{}, ErrPasswordDontMatch
 	}
 
-	if u, _ := a.authRepo.GetByEmail(ctx, dto.Email); u.Email == dto.Email {
+	if u, _ := a.userRepo.GetByEmail(ctx, dto.Email); u.Email == dto.Email {
 		a.log.Error(ErrUserAlreadyExistEmail)
 		return &domain.User{}, ErrUserAlreadyExistEmail
 	}
 
-	if u, _ := a.authRepo.GetByUsername(ctx, dto.Username); u.Username == dto.Username {
+	if u, _ := a.userRepo.GetByUsername(ctx, dto.Username); u.Username == dto.Username {
 		a.log.Error(ErrUserAlreadyExistUsername)
 		return &domain.User{}, ErrUserAlreadyExistUsername
 	}
 
-	if u, _ := a.authRepo.GetByPhone(ctx, dto.Phone); u.Phone == dto.Phone {
+	if u, _ := a.userRepo.GetByPhone(ctx, dto.Phone); u.Phone == dto.Phone {
 		a.log.Error(ErrUserAlreadyExistPhone)
 		return &domain.User{}, ErrUserAlreadyExistPhone
 	}
@@ -74,13 +79,13 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 
 	model := domain.NewUser(dto, passwordHash)
 
-	user, err := a.authRepo.Create(ctx, model)
+	user, err := a.userRepo.Create(ctx, model)
 	if err != nil {
 		a.log.Error(err)
 		return &domain.User{}, internalErr(err)
 	}
 
-	err = a.authRepo.CreateSession(ctx, user.ID)
+	err = a.sessionRepo.CreateSession(ctx, user.ID)
 	if err != nil {
 		a.log.Error(err)
 		return &domain.User{}, internalErr(err)
@@ -91,7 +96,7 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 
 func (a *authUseCase) SignIn(ctx context.Context, email, password string) (*domain.User, error) {
 	a.log.Info("signIn use case")
-	user, err := a.authRepo.GetByEmail(ctx, email)
+	user, err := a.userRepo.GetByEmail(ctx, email)
 	if err != nil {
 		a.log.Error(ErrUserNotFoundEmail)
 		return &domain.User{}, ErrUserNotFoundEmail
@@ -127,7 +132,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 
 	session := domain.NewSession(userId, refresh, a.refreshTokenTTL)
 
-	if err := a.authRepo.UpdateSession(ctx, session); err != nil {
+	if err := a.sessionRepo.UpdateSession(ctx, session); err != nil {
 		a.log.Error(err)
 		return &v1.Tokens{}, internalErr(err)
 	}
@@ -137,7 +142,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 
 func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (string, error) {
 	a.log.Info("GetIdFromRefresh use case")
-	userId, err := a.authRepo.GetIdByToken(ctx, refresh)
+	userId, err := a.sessionRepo.GetIdByToken(ctx, refresh)
 	if err != nil {
 		a.log.Error(ErrTokenInvalid)
 		return "", ErrTokenInvalid
