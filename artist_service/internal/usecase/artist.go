@@ -48,7 +48,7 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 		return "", err
 	}
 
-	album := domain.NewAlbum(albumDTO.Title, albumDTO.ReleaseYear, artistId, albumDTO.NumberTracks)
+	album := domain.NewAlbum(albumDTO.Title, artistId, albumDTO.ReleaseYear, albumDTO.NumberTracks)
 
 	albumId, err := a.albumRepo.CreateAlbum(ctx, album)
 	if err != nil {

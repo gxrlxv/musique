@@ -32,7 +32,7 @@ message Track {
 
 message CreateAlbumRequest{
   string album_title = 1;
-  string release_year = 2;
+  int32 release_year = 2;
   string artist_name = 3;
   repeated Track tracks = 4;
 }

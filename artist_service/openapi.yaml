@@ -68,7 +68,8 @@ components:
                 albumTitle:
                     type: string
                 releaseYear:
-                    type: string
+                    type: integer
+                    format: int32
                 artistName:
                     type: string
                 tracks:

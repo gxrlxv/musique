@@ -6,7 +6,7 @@ type Track struct {
 	ArtistId     string
 	AlbumId      string
 	GenreId      int
-	ReleaseYear  string
+	ReleaseYear  int32
 	Milliseconds int64
 	Bytes        int64
 }
@@ -18,7 +18,7 @@ type CreateTrackDTO struct {
 	Bytes        int64
 }
 
-func NewTrack(title, artistId, albumId, releaseYear string, genreId int, milliseconds, bytes int64) *Track {
+func NewTrack(title, artistId, albumId string, releaseYear int32, genreId int, milliseconds, bytes int64) *Track {
 	return &Track{
 		Id:           "",
 		Title:        title,
