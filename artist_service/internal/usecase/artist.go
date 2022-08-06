@@ -43,8 +43,11 @@ func NewAlbumUseCase(albumRepo AlbumRepository, trackRepo TrackRepository, genre
 }
 
 func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAlbumDTO) (string, error) {
+	a.log.Info("create album use case")
+
 	artistId, err := a.artistRepo.GetByName(ctx, albumDTO.ArtistName)
 	if err != nil {
+		a.log.Error(err)
 		return "", err
 	}
 
@@ -52,12 +55,14 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 
 	albumId, err := a.albumRepo.CreateAlbum(ctx, album)
 	if err != nil {
+		a.log.Error(err)
 		return "", err
 	}
 
 	for i := 0; i < albumDTO.NumberTracks; i++ {
 		genreId, err := a.genreRepo.GetByTitle(ctx, albumDTO.Tracks[i].Genre)
 		if err != nil {
+			a.log.Error(err)
 			return "", err
 		}
 
@@ -65,6 +70,7 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 
 		err = a.trackRepo.SaveTrack(ctx, track)
 		if err != nil {
+			a.log.Error(err)
 			return "", err
 		}
 	}
@@ -73,14 +79,17 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 }
 
 func (a *albumUseCase) DeleteAlbum(ctx context.Context, albumId string) error {
+	a.log.Info("delete album use case")
 
 	err := a.trackRepo.DeleteTracks(ctx, albumId)
 	if err != nil {
+		a.log.Error(err)
 		return err
 	}
 
 	err = a.albumRepo.DeleteAlbum(ctx, albumId)
 	if err != nil {
+		a.log.Error(err)
 		return err
 	}
 

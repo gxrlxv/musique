@@ -27,6 +27,7 @@ func NewArtistService(useCase ArtistUseCase, log *logrus.Logger) *ArtistService 
 }
 
 func (as *ArtistService) CreateAlbum(ctx context.Context, in *v1.CreateAlbumRequest) (*v1.CreateAlbumReply, error) {
+	as.log.Info("create album service")
 
 	var tracksDTO []*domain.CreateTrackDTO
 
@@ -60,6 +61,7 @@ func (as *ArtistService) CreateAlbum(ctx context.Context, in *v1.CreateAlbumRequ
 }
 
 func (as *ArtistService) DeleteAlbum(ctx context.Context, in *v1.DeleteAlbumRequest) (*v1.DeleteAlbumReply, error) {
+	as.log.Info("delete album service")
 
 	err := as.uc.DeleteAlbum(ctx, in.AlbumId)
 	if err != nil {
