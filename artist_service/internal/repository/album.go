@@ -22,14 +22,14 @@ func NewAlbumRepository(client postgresql.Client, log *logrus.Logger) *albumRepo
 func (ar *albumRepository) CreateAlbum(ctx context.Context, album *domain.Album) (string, error) {
 	q := `
 			INSERT INTO public.album
-    			(title, artist_id, release_year)
+    			(title, artist_id, release_year, number_tracks)
 			VALUES
-    			($1,$2,$3)
+    			($1,$2,$3,$4)
 			RETURNING id`
 
 	var albumId string
 
-	err := ar.client.QueryRow(ctx, q, album.Title, album.ArtistId, album.ReleaseYear).Scan(&albumId)
+	err := ar.client.QueryRow(ctx, q, album.Title, album.ArtistId, album.ReleaseYear, album.NumberTracks).Scan(&albumId)
 	if err != nil {
 		ar.log.Error(err)
 		return "", err
