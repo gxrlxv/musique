@@ -9,6 +9,7 @@ import (
 type AlbumRepository interface {
 	CreateAlbum(ctx context.Context, album *domain.Album) (string, error)
 	DeleteAlbum(ctx context.Context, albumId string) error
+	GetAlbumByID(ctx context.Context, albumId string) (domain.Album, error)
 }
 
 type TrackRepository interface {
@@ -81,7 +82,12 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 func (a *albumUseCase) DeleteAlbum(ctx context.Context, albumId string) error {
 	a.log.Info("delete album use case")
 
-	err := a.trackRepo.DeleteTracks(ctx, albumId)
+	_, err := a.albumRepo.GetAlbumByID(ctx, albumId)
+	if err != nil {
+		return err
+	}
+
+	err = a.trackRepo.DeleteTracks(ctx, albumId)
 	if err != nil {
 		a.log.Error(err)
 		return err

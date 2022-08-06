@@ -51,3 +51,19 @@ func (ar *albumRepository) DeleteAlbum(ctx context.Context, albumId string) erro
 
 	return nil
 }
+func (ar *albumRepository) GetAlbumByID(ctx context.Context, albumId string) (domain.Album, error) {
+	q := `
+			SELECT id, title, artist_id, number_tracks, release_year
+			FROM public.album 
+			WHERE id = $1`
+
+	var album domain.Album
+
+	err := ar.client.QueryRow(ctx, q, albumId).Scan(&album.Id, &album.Title, &album.ArtistId, &album.NumberTracks, &album.ReleaseYear)
+	if err != nil {
+		ar.log.Error(err)
+		return domain.Album{}, err
+	}
+
+	return album, nil
+}
