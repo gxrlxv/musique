@@ -7,6 +7,7 @@ Unit tests: [testify](https://github.com/stretchr/testify)\
 Logging: [logrus](https://github.com/sirupsen/logrus)\
 OpenAPI: [protoc-gen-openapi](https://github.com/google/gnostic/tree/main/cmd/protoc-gen-openapi)
 # Service data model
-![musique (7)](https://user-images.githubusercontent.com/71068953/182881254-643f0ce4-b9e4-4644-bc2c-a2251cd59c3f.png)
+![musique (8)](https://user-images.githubusercontent.com/71068953/183240109-317b151a-1e97-407c-8083-d76bd1f956a6.png)
 # Licence
 [MIT Licence](LICENCE)
+
