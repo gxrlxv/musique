@@ -4,6 +4,7 @@ package api.artist.v1;
 
 import "google/api/annotations.proto";
 
+
 option go_package = "github.com/gxrlxv/musique/artist_service/api/artist/v1";
 
 
@@ -46,6 +47,6 @@ message DeleteAlbumRequest{
 }
 
 message DeleteAlbumReply{
-  string album_id = 1;
+  bool success = 1;
 }
 

@@ -9,7 +9,7 @@ import (
 
 type ArtistUseCase interface {
 	CreateAlbum(ctx context.Context, album domain.CreateAlbumDTO) (string, error)
-	DeleteAlbum(ctx context.Context, albumId string) error
+	DeleteAlbum(ctx context.Context, albumId string) (bool, error)
 }
 
 type ArtistService struct {
@@ -63,12 +63,14 @@ func (as *ArtistService) CreateAlbum(ctx context.Context, in *v1.CreateAlbumRequ
 func (as *ArtistService) DeleteAlbum(ctx context.Context, in *v1.DeleteAlbumRequest) (*v1.DeleteAlbumReply, error) {
 	as.log.Info("delete album service")
 
-	err := as.uc.DeleteAlbum(ctx, in.AlbumId)
+	success, err := as.uc.DeleteAlbum(ctx, in.AlbumId)
 	if err != nil {
-		return &v1.DeleteAlbumReply{}, err
+		return &v1.DeleteAlbumReply{
+			Success: success,
+		}, err
 	}
 
 	return &v1.DeleteAlbumReply{
-		AlbumId: "",
+		Success: success,
 	}, nil
 }

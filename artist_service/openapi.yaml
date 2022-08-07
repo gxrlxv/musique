@@ -79,8 +79,8 @@ components:
         DeleteAlbumReply:
             type: object
             properties:
-                albumId:
-                    type: string
+                success:
+                    type: boolean
         GoogleProtobufAny:
             type: object
             properties:
