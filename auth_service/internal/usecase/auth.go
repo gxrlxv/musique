@@ -153,11 +153,15 @@ func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (str
 
 func (a *authUseCase) Identify(ctx context.Context, access string) (string, error) {
 	a.log.Info("Identify use case")
-	userID, err := a.tokenManager.Parse(access)
+	role, err := a.tokenManager.Parse(access)
 	if err != nil {
 		a.log.Error(ErrTokenInvalid)
 		return "", ErrTokenInvalid
 	}
 
-	return userID, nil
+	if role != "artist" {
+		return "", ErrTokenInvalid
+	}
+
+	return role, nil
 }

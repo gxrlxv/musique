@@ -114,10 +114,10 @@ func (a *AuthService) RefreshToken(ctx context.Context, in *v1.RefreshTokenReque
 	return &v1.RefreshTokenReply{Tokens: tokens}, nil
 }
 
-func (a *AuthService) Identify(ctx context.Context, in *v1.IdentityRequest) (*v1.IdentityReply, error) {
-	userId, err := a.uc.Identify(ctx, in.AccessToken)
+func (a *AuthService) IdentifyArtist(ctx context.Context, in *v1.IdentifyArtistRequest) (*v1.IdentifyArtistReply, error) {
+	role, err := a.uc.Identify(ctx, in.AccessToken)
 	if err != nil {
-		return &v1.IdentityReply{}, err
+		return &v1.IdentifyArtistReply{Role: role}, err
 	}
-	return &v1.IdentityReply{Id: userId}, nil
+	return &v1.IdentifyArtistReply{Role: role}, nil
 }

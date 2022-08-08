@@ -31,9 +31,7 @@ service Auth{
     };
   };
 
-  rpc Identify(IdentityRequest) returns(IdentityReply){
-
-  }
+  rpc IdentifyArtist(IdentifyArtistRequest) returns(IdentifyArtistReply){}
 }
 
 message Tokens{
@@ -77,9 +75,9 @@ message RefreshTokenReply{
   Tokens tokens = 1;
 }
 
-message IdentityRequest {
+message IdentifyArtistRequest {
   string access_token = 1;
 }
-message IdentityReply {
-  string Id = 1;
+message IdentifyArtistReply {
+  string role = 1;
 }

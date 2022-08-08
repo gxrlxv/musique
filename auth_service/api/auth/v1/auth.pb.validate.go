@@ -1106,22 +1106,22 @@ var _ interface {
 	ErrorName() string
 } = RefreshTokenReplyValidationError{}
 
-// Validate checks the field values on IdentityRequest with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *IdentityRequest) Validate() error {
+// Validate checks the field values on IdentifyArtistRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *IdentifyArtistRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on IdentityRequest with the rules
+// ValidateAll checks the field values on IdentifyArtistRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// IdentityRequestMultiError, or nil if none found.
-func (m *IdentityRequest) ValidateAll() error {
+// IdentifyArtistRequestMultiError, or nil if none found.
+func (m *IdentifyArtistRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *IdentityRequest) validate(all bool) error {
+func (m *IdentifyArtistRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1131,19 +1131,19 @@ func (m *IdentityRequest) validate(all bool) error {
 	// no validation rules for AccessToken
 
 	if len(errors) > 0 {
-		return IdentityRequestMultiError(errors)
+		return IdentifyArtistRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// IdentityRequestMultiError is an error wrapping multiple validation errors
-// returned by IdentityRequest.ValidateAll() if the designated constraints
-// aren't met.
-type IdentityRequestMultiError []error
+// IdentifyArtistRequestMultiError is an error wrapping multiple validation
+// errors returned by IdentifyArtistRequest.ValidateAll() if the designated
+// constraints aren't met.
+type IdentifyArtistRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m IdentityRequestMultiError) Error() string {
+func (m IdentifyArtistRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1152,11 +1152,11 @@ func (m IdentityRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m IdentityRequestMultiError) AllErrors() []error { return m }
+func (m IdentifyArtistRequestMultiError) AllErrors() []error { return m }
 
-// IdentityRequestValidationError is the validation error returned by
-// IdentityRequest.Validate if the designated constraints aren't met.
-type IdentityRequestValidationError struct {
+// IdentifyArtistRequestValidationError is the validation error returned by
+// IdentifyArtistRequest.Validate if the designated constraints aren't met.
+type IdentifyArtistRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1164,22 +1164,24 @@ type IdentityRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e IdentityRequestValidationError) Field() string { return e.field }
+func (e IdentifyArtistRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e IdentityRequestValidationError) Reason() string { return e.reason }
+func (e IdentifyArtistRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e IdentityRequestValidationError) Cause() error { return e.cause }
+func (e IdentifyArtistRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e IdentityRequestValidationError) Key() bool { return e.key }
+func (e IdentifyArtistRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e IdentityRequestValidationError) ErrorName() string { return "IdentityRequestValidationError" }
+func (e IdentifyArtistRequestValidationError) ErrorName() string {
+	return "IdentifyArtistRequestValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e IdentityRequestValidationError) Error() string {
+func (e IdentifyArtistRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1191,14 +1193,14 @@ func (e IdentityRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sIdentityRequest.%s: %s%s",
+		"invalid %sIdentifyArtistRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = IdentityRequestValidationError{}
+var _ error = IdentifyArtistRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1206,46 +1208,46 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = IdentityRequestValidationError{}
+} = IdentifyArtistRequestValidationError{}
 
-// Validate checks the field values on IdentityReply with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *IdentityReply) Validate() error {
+// Validate checks the field values on IdentifyArtistReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *IdentifyArtistReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on IdentityReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in IdentityReplyMultiError, or
-// nil if none found.
-func (m *IdentityReply) ValidateAll() error {
+// ValidateAll checks the field values on IdentifyArtistReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// IdentifyArtistReplyMultiError, or nil if none found.
+func (m *IdentifyArtistReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *IdentityReply) validate(all bool) error {
+func (m *IdentifyArtistReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for Id
+	// no validation rules for Role
 
 	if len(errors) > 0 {
-		return IdentityReplyMultiError(errors)
+		return IdentifyArtistReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// IdentityReplyMultiError is an error wrapping multiple validation errors
-// returned by IdentityReply.ValidateAll() if the designated constraints
-// aren't met.
-type IdentityReplyMultiError []error
+// IdentifyArtistReplyMultiError is an error wrapping multiple validation
+// errors returned by IdentifyArtistReply.ValidateAll() if the designated
+// constraints aren't met.
+type IdentifyArtistReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m IdentityReplyMultiError) Error() string {
+func (m IdentifyArtistReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1254,11 +1256,11 @@ func (m IdentityReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m IdentityReplyMultiError) AllErrors() []error { return m }
+func (m IdentifyArtistReplyMultiError) AllErrors() []error { return m }
 
-// IdentityReplyValidationError is the validation error returned by
-// IdentityReply.Validate if the designated constraints aren't met.
-type IdentityReplyValidationError struct {
+// IdentifyArtistReplyValidationError is the validation error returned by
+// IdentifyArtistReply.Validate if the designated constraints aren't met.
+type IdentifyArtistReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1266,22 +1268,24 @@ type IdentityReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e IdentityReplyValidationError) Field() string { return e.field }
+func (e IdentifyArtistReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e IdentityReplyValidationError) Reason() string { return e.reason }
+func (e IdentifyArtistReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e IdentityReplyValidationError) Cause() error { return e.cause }
+func (e IdentifyArtistReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e IdentityReplyValidationError) Key() bool { return e.key }
+func (e IdentifyArtistReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e IdentityReplyValidationError) ErrorName() string { return "IdentityReplyValidationError" }
+func (e IdentifyArtistReplyValidationError) ErrorName() string {
+	return "IdentifyArtistReplyValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e IdentityReplyValidationError) Error() string {
+func (e IdentifyArtistReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1293,14 +1297,14 @@ func (e IdentityReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sIdentityReply.%s: %s%s",
+		"invalid %sIdentifyArtistReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = IdentityReplyValidationError{}
+var _ error = IdentifyArtistReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -1308,4 +1312,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = IdentityReplyValidationError{}
+} = IdentifyArtistReplyValidationError{}
