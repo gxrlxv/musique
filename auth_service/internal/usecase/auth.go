@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+var artistRole = "artist"
+
 type UserRepository interface {
 	Create(ctx context.Context, user *domain.User) (*domain.User, error)
 	GetByUsername(ctx context.Context, username string) (*domain.User, error)
@@ -159,7 +161,7 @@ func (a *authUseCase) IdentifyArtist(ctx context.Context, access string) (string
 		return "", ErrTokenInvalid
 	}
 
-	if role != "artist" {
+	if role != artistRole {
 		return "", ErrHaveNotPermission
 	}
 
