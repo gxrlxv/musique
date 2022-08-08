@@ -13,6 +13,7 @@ var (
 	ErrPasswordInvalid          = status.Error(codes.PermissionDenied, "invalid password")
 	ErrPasswordDontMatch        = status.Error(codes.PermissionDenied, "password's don't match")
 	ErrTokenInvalid             = status.Error(codes.Unauthenticated, "invalid token")
+	ErrHaveNotPermission        = status.Error(codes.Unauthenticated, "have not permission")
 )
 
 func internalErr(err error) error {

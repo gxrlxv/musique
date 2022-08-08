@@ -151,7 +151,7 @@ func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (str
 	return userId, nil
 }
 
-func (a *authUseCase) Identify(ctx context.Context, access string) (string, error) {
+func (a *authUseCase) IdentifyArtist(ctx context.Context, access string) (string, error) {
 	a.log.Info("Identify use case")
 	role, err := a.tokenManager.Parse(access)
 	if err != nil {
@@ -160,7 +160,7 @@ func (a *authUseCase) Identify(ctx context.Context, access string) (string, erro
 	}
 
 	if role != "artist" {
-		return "", ErrTokenInvalid
+		return "", ErrHaveNotPermission
 	}
 
 	return role, nil
