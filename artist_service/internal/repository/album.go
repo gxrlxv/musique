@@ -35,7 +35,7 @@ func (ar *albumRepository) CreateAlbum(ctx context.Context, album *domain.Album)
 		return "", err
 	}
 
-	return albumId, nil
+	return albumId, err
 }
 
 func (ar *albumRepository) DeleteAlbum(ctx context.Context, albumId string) error {
@@ -49,7 +49,7 @@ func (ar *albumRepository) DeleteAlbum(ctx context.Context, albumId string) erro
 		return err
 	}
 
-	return nil
+	return err
 }
 func (ar *albumRepository) GetAlbumByID(ctx context.Context, albumId string) (domain.Album, error) {
 	q := `
@@ -65,7 +65,7 @@ func (ar *albumRepository) GetAlbumByID(ctx context.Context, albumId string) (do
 		return domain.Album{}, err
 	}
 
-	return album, nil
+	return album, err
 }
 
 func (ar *albumRepository) UpdateAlbum(ctx context.Context, albumDTO domain.UpdateAlbumDTO) error {

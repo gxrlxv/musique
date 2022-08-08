@@ -78,7 +78,7 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 		}
 	}
 
-	return albumId, nil
+	return albumId, err
 }
 
 func (a *albumUseCase) DeleteAlbum(ctx context.Context, albumId string) (bool, error) {
@@ -101,7 +101,7 @@ func (a *albumUseCase) DeleteAlbum(ctx context.Context, albumId string) (bool, e
 		return false, err
 	}
 
-	return true, nil
+	return true, err
 }
 
 func (a *albumUseCase) DeleteTrack(ctx context.Context, albumId, trackId string) (bool, error) {
@@ -130,5 +130,5 @@ func (a *albumUseCase) DeleteTrack(ctx context.Context, albumId, trackId string)
 		return false, err
 	}
 
-	return true, nil
+	return true, err
 }

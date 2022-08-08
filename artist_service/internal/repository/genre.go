@@ -32,5 +32,5 @@ func (gr *genreRepository) GetByTitle(ctx context.Context, title string) (int, e
 		return 0, err
 	}
 
-	return genreId, nil
+	return genreId, err
 }

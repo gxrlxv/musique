@@ -58,7 +58,7 @@ func (as *ArtistService) CreateAlbum(ctx context.Context, in *v1.CreateAlbumRequ
 
 	return &v1.CreateAlbumReply{
 		AlbumId: albumId,
-	}, nil
+	}, err
 }
 
 func (as *ArtistService) DeleteAlbum(ctx context.Context, in *v1.DeleteAlbumRequest) (*v1.DeleteAlbumReply, error) {
@@ -73,7 +73,7 @@ func (as *ArtistService) DeleteAlbum(ctx context.Context, in *v1.DeleteAlbumRequ
 
 	return &v1.DeleteAlbumReply{
 		Success: success,
-	}, nil
+	}, err
 }
 
 func (as *ArtistService) DeleteTrack(ctx context.Context, in *v1.DeleteTrackRequest) (*v1.DeleteTrackReply, error) {
@@ -88,5 +88,5 @@ func (as *ArtistService) DeleteTrack(ctx context.Context, in *v1.DeleteTrackRequ
 
 	return &v1.DeleteTrackReply{
 		Success: success,
-	}, nil
+	}, err
 }

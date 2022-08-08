@@ -32,7 +32,7 @@ func (tr *trackRepository) SaveTrack(ctx context.Context, track *domain.Track) e
 		return err
 	}
 
-	return nil
+	return err
 }
 
 func (tr *trackRepository) DeleteTracks(ctx context.Context, albumId string) error {
@@ -46,7 +46,7 @@ func (tr *trackRepository) DeleteTracks(ctx context.Context, albumId string) err
 		return err
 	}
 
-	return nil
+	return err
 }
 
 func (tr *trackRepository) DeleteTrack(ctx context.Context, albumId, trackId string) error {
@@ -60,5 +60,5 @@ func (tr *trackRepository) DeleteTrack(ctx context.Context, albumId, trackId str
 		return err
 	}
 
-	return nil
+	return err
 }

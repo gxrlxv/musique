@@ -32,5 +32,5 @@ func (ar *artistRepository) GetByName(ctx context.Context, name string) (string,
 		return "", err
 	}
 
-	return artistId, nil
+	return artistId, err
 }
