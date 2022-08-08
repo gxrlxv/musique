@@ -22,6 +22,12 @@ service Artist{
       delete: "/artist/albums/{album_id}"
     };
   };
+
+  rpc DeleteTrack(DeleteTrackRequest) returns(DeleteTrackReply){
+    option (google.api.http) = {
+      delete: "/artist/albums/{album_id}/{track_id}"
+    };
+  };
 }
 
 message Track {
@@ -49,4 +55,14 @@ message DeleteAlbumRequest{
 message DeleteAlbumReply{
   bool success = 1;
 }
+
+message DeleteTrackRequest{
+  string album_id = 1;
+  string track_id = 2;
+}
+
+message DeleteTrackReply{
+  bool success = 1;
+}
+
 

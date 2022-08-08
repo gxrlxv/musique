@@ -10,6 +10,7 @@ import (
 type ArtistUseCase interface {
 	CreateAlbum(ctx context.Context, album domain.CreateAlbumDTO) (string, error)
 	DeleteAlbum(ctx context.Context, albumId string) (bool, error)
+	DeleteTrack(ctx context.Context, albumId, trackId string) (bool, error)
 }
 
 type ArtistService struct {
@@ -71,6 +72,21 @@ func (as *ArtistService) DeleteAlbum(ctx context.Context, in *v1.DeleteAlbumRequ
 	}
 
 	return &v1.DeleteAlbumReply{
+		Success: success,
+	}, nil
+}
+
+func (as *ArtistService) DeleteTrack(ctx context.Context, in *v1.DeleteTrackRequest) (*v1.DeleteTrackReply, error) {
+	as.log.Info("delete track service")
+
+	success, err := as.uc.DeleteTrack(ctx, in.AlbumId, in.TrackId)
+	if err != nil {
+		return &v1.DeleteTrackReply{
+			Success: success,
+		}, err
+	}
+
+	return &v1.DeleteTrackReply{
 		Success: success,
 	}, nil
 }

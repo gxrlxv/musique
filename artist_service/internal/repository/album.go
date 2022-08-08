@@ -67,3 +67,18 @@ func (ar *albumRepository) GetAlbumByID(ctx context.Context, albumId string) (do
 
 	return album, nil
 }
+
+func (ar *albumRepository) UpdateAlbum(ctx context.Context, albumDTO domain.UpdateAlbumDTO) error {
+	q := `
+			UPDATE public.album 
+			SET title = $1, number_tracks = $2 
+			WHERE id = $3`
+
+	_, err := ar.client.Exec(ctx, q, albumDTO.Title, albumDTO.NumberTracks, albumDTO.Id)
+	if err != nil {
+		ar.log.Error(err)
+		return err
+	}
+
+	return err
+}

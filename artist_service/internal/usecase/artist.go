@@ -10,10 +10,12 @@ type AlbumRepository interface {
 	CreateAlbum(ctx context.Context, album *domain.Album) (string, error)
 	DeleteAlbum(ctx context.Context, albumId string) error
 	GetAlbumByID(ctx context.Context, albumId string) (domain.Album, error)
+	UpdateAlbum(ctx context.Context, albumDTO domain.UpdateAlbumDTO) error
 }
 
 type TrackRepository interface {
 	SaveTrack(ctx context.Context, track *domain.Track) error
+	DeleteTrack(ctx context.Context, albumId, trackId string) error
 	DeleteTracks(ctx context.Context, albumId string) error
 }
 
@@ -94,6 +96,35 @@ func (a *albumUseCase) DeleteAlbum(ctx context.Context, albumId string) (bool, e
 	}
 
 	err = a.albumRepo.DeleteAlbum(ctx, albumId)
+	if err != nil {
+		a.log.Error(err)
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (a *albumUseCase) DeleteTrack(ctx context.Context, albumId, trackId string) (bool, error) {
+	a.log.Info("delete track use case")
+
+	album, err := a.albumRepo.GetAlbumByID(ctx, albumId)
+	if err != nil {
+		a.log.Error(err)
+		return false, err
+	}
+
+	updateAlbum := domain.UpdateAlbumDTO{
+		Id:           albumId,
+		Title:        album.Title,
+		NumberTracks: album.NumberTracks - 1,
+	}
+
+	err = a.albumRepo.UpdateAlbum(ctx, updateAlbum)
+	if err != nil {
+		return false, err
+	}
+
+	err = a.trackRepo.DeleteTrack(ctx, albumId, trackId)
 	if err != nil {
 		a.log.Error(err)
 		return false, err

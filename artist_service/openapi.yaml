@@ -55,6 +55,35 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /artist/albums/{albumId}/{trackId}:
+        delete:
+            tags:
+                - Artist
+            operationId: Artist_DeleteTrack
+            parameters:
+                - name: albumId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: trackId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteTrackReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
         CreateAlbumReply:
@@ -77,6 +106,11 @@ components:
                     items:
                         $ref: '#/components/schemas/Track'
         DeleteAlbumReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        DeleteTrackReply:
             type: object
             properties:
                 success:

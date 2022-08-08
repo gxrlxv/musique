@@ -16,6 +16,12 @@ type CreateAlbumDTO struct {
 	Tracks       []*CreateTrackDTO
 }
 
+type UpdateAlbumDTO struct {
+	Id           string
+	Title        string
+	NumberTracks int
+}
+
 func NewAlbum(title, artistId string, releaseYear int32, numberTracks int) *Album {
 	return &Album{
 		Id:           "",

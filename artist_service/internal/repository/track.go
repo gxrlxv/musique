@@ -48,3 +48,17 @@ func (tr *trackRepository) DeleteTracks(ctx context.Context, albumId string) err
 
 	return nil
 }
+
+func (tr *trackRepository) DeleteTrack(ctx context.Context, albumId, trackId string) error {
+	q := `
+			DELETE FROM public.track
+    		WHERE album_id = $1 and id = $2`
+
+	_, err := tr.client.Exec(ctx, q, albumId, trackId)
+	if err != nil {
+		tr.log.Error(err)
+		return err
+	}
+
+	return nil
+}
