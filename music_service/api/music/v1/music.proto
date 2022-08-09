@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package api.track.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/gxrlxv/musique/music_service/api/music/v1";
+
+
+// The track service definition.
+service Music{
+  rpc AddTrack(AddTrackRequest) returns(AddTrackReply){
+    option (google.api.http) = {
+      post: "/albums/{trackId}/add"
+      body: "*"
+    };
+  };
+
+  rpc RemoveTrack(RemoveTrackRequest) returns(RemoveTrackReply){
+    option (google.api.http) = {
+      delete: "/albums/{trackId}/remove"
+    };
+  };
+
+  rpc GetTracks(GetTracksRequest) returns(GetTracksReply){
+    option (google.api.http) = {
+      get: "/albums"
+    };
+  };
+}
+
+
+
+message AddTrackRequest{
+  string trackId = 1;
+}
+
+message AddTrackReply{
+
+}
+
+
+message RemoveTrackRequest{
+  string trackId = 1;
+}
+
+message RemoveTrackReply{
+
+}
+
+message GetTracksRequest{
+
+}
+
+message GetTracksReply{
+
+}

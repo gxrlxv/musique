@@ -1,0 +1,12 @@
+server:
+  http:
+    addr: 0.0.0.0:8001
+  grpc:
+    addr: 0.0.0.0:9001
+
+storage:
+  host: postgres
+  port: 5432
+  database: musiqueDB
+  username: gxrlxv
+  password: qwerty
