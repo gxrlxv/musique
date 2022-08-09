@@ -9,7 +9,7 @@ import (
 var freeSubId = 1
 
 type SubscriptionRepository interface {
-	CreateSubscription(ctx context.Context, subscription *domain.Subscription) error
+	CreateSubscription(ctx context.Context, subscription domain.Subscription) error
 	GetBySubscriptionId(ctx context.Context, id int) (time.Duration, error)
 }
 
@@ -28,5 +28,5 @@ func (a *authUseCase) NewSubscription(ctx context.Context, userId string) error 
 		return err
 	}
 
-	return nil
+	return err
 }

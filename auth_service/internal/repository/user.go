@@ -49,7 +49,7 @@ func (ur *userRepository) Create(ctx context.Context, user domain.User) (domain.
 		return domain.User{}, err
 	}
 
-	return user, nil
+	return user, err
 }
 
 func (ur *userRepository) GetByUsername(ctx context.Context, username string) (domain.User, error) {
@@ -70,7 +70,7 @@ func (ur *userRepository) GetByUsername(ctx context.Context, username string) (d
 		return domain.User{}, err
 	}
 
-	return u, nil
+	return u, err
 }
 
 func (ur *userRepository) GetByEmail(ctx context.Context, email string) (domain.User, error) {
@@ -91,7 +91,7 @@ func (ur *userRepository) GetByEmail(ctx context.Context, email string) (domain.
 		return domain.User{}, err
 	}
 
-	return u, nil
+	return u, err
 }
 
 func (ur *userRepository) GetByPhone(ctx context.Context, phone string) (domain.User, error) {
@@ -112,5 +112,5 @@ func (ur *userRepository) GetByPhone(ctx context.Context, phone string) (domain.
 		return domain.User{}, err
 	}
 
-	return u, nil
+	return u, err
 }

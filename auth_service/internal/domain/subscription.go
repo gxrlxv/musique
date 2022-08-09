@@ -9,8 +9,8 @@ type Subscription struct {
 	EndDate        time.Time `json:"end_date"`
 }
 
-func NewSubscription(userId string, subId int, duration time.Duration) *Subscription {
-	return &Subscription{
+func NewSubscription(userId string, subId int, duration time.Duration) Subscription {
+	return Subscription{
 		UserId:         userId,
 		SubscriptionId: subId,
 		StartDate:      time.Now(),

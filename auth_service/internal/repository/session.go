@@ -32,10 +32,10 @@ func (sr *sessionRepository) CreateSession(ctx context.Context, userID string) e
 		return err
 	}
 
-	return nil
+	return err
 }
 
-func (sr *sessionRepository) UpdateSession(ctx context.Context, session *domain.Session) error {
+func (sr *sessionRepository) UpdateSession(ctx context.Context, session domain.Session) error {
 	q := `
 			UPDATE public.session
 			SET refresh_token = $1, expires_at = $2
@@ -47,7 +47,7 @@ func (sr *sessionRepository) UpdateSession(ctx context.Context, session *domain.
 		return err
 	}
 
-	return nil
+	return err
 }
 
 func (sr *sessionRepository) GetIdByToken(ctx context.Context, refresh string) (string, error) {
@@ -63,5 +63,5 @@ func (sr *sessionRepository) GetIdByToken(ctx context.Context, refresh string) (
 		return "", err
 	}
 
-	return userId, nil
+	return userId, err
 }

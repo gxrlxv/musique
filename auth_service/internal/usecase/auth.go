@@ -20,7 +20,7 @@ type UserRepository interface {
 }
 
 type SessionRepository interface {
-	UpdateSession(ctx context.Context, session *domain.Session) error
+	UpdateSession(ctx context.Context, session domain.Session) error
 	CreateSession(ctx context.Context, userID string) error
 	GetIdByToken(ctx context.Context, refresh string) (string, error)
 }
@@ -93,7 +93,7 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (dom
 		return domain.User{}, internalErr(err)
 	}
 
-	return user, nil
+	return user, err
 }
 
 func (a *authUseCase) SignIn(ctx context.Context, email, password string) (domain.User, error) {
@@ -114,7 +114,7 @@ func (a *authUseCase) SignIn(ctx context.Context, email, password string) (domai
 		return domain.User{}, ErrPasswordInvalid
 	}
 
-	return user, nil
+	return user, err
 }
 
 func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error) {
@@ -138,7 +138,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 		return &v1.Tokens{}, internalErr(err)
 	}
 
-	return &v1.Tokens{AccessToken: access, RefreshToken: refresh}, nil
+	return &v1.Tokens{AccessToken: access, RefreshToken: refresh}, err
 }
 
 func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (string, error) {
@@ -149,7 +149,7 @@ func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (str
 		return "", ErrTokenInvalid
 	}
 
-	return userId, nil
+	return userId, err
 }
 
 func (a *authUseCase) IdentifyArtist(ctx context.Context, access string) (string, error) {
@@ -164,5 +164,5 @@ func (a *authUseCase) IdentifyArtist(ctx context.Context, access string) (string
 		return "", ErrHaveNotPermission
 	}
 
-	return role, nil
+	return role, err
 }

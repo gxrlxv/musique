@@ -20,7 +20,7 @@ func NewSubscriptionRepository(client postgresql.Client, log *logrus.Logger) *su
 	}
 }
 
-func (sr *subscriptionRepository) CreateSubscription(ctx context.Context, subscription *domain.Subscription) error {
+func (sr *subscriptionRepository) CreateSubscription(ctx context.Context, subscription domain.Subscription) error {
 	q := `
 			INSERT INTO public.subscription_validity
     			(subscription_id, start_date, end_date, user_id)
@@ -33,7 +33,7 @@ func (sr *subscriptionRepository) CreateSubscription(ctx context.Context, subscr
 		return err
 	}
 
-	return nil
+	return err
 }
 
 func (sr *subscriptionRepository) GetBySubscriptionId(ctx context.Context, id int) (time.Duration, error) {
@@ -50,5 +50,5 @@ func (sr *subscriptionRepository) GetBySubscriptionId(ctx context.Context, id in
 		return 0, err
 	}
 
-	return duration, nil
+	return duration, err
 }

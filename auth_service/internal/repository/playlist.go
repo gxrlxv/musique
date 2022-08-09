@@ -31,5 +31,5 @@ func (pr *playlistRepository) Create(ctx context.Context, userId string) error {
 		return err
 	}
 
-	return nil
+	return err
 }

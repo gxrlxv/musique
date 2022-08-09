@@ -17,5 +17,5 @@ func (a *authUseCase) NewPlaylist(ctx context.Context, userId string) error {
 		return internalErr(err)
 	}
 
-	return nil
+	return err
 }
