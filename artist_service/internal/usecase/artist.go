@@ -132,3 +132,40 @@ func (a *albumUseCase) DeleteTrack(ctx context.Context, albumId, trackId string)
 
 	return true, err
 }
+
+func (a *albumUseCase) AddTrack(ctx context.Context, albumId string, trackDTO domain.CreateTrackDTO) (bool, error) {
+	a.log.Info("add track use case")
+
+	album, err := a.albumRepo.GetAlbumByID(ctx, albumId)
+	if err != nil {
+		a.log.Error(err)
+		return false, err
+	}
+
+	updateAlbum := domain.UpdateAlbumDTO{
+		Id:           albumId,
+		Title:        album.Title,
+		NumberTracks: album.NumberTracks + 1,
+	}
+
+	err = a.albumRepo.UpdateAlbum(ctx, updateAlbum)
+	if err != nil {
+		return false, err
+	}
+
+	genreId, err := a.genreRepo.GetByTitle(ctx, trackDTO.Genre)
+	if err != nil {
+		a.log.Error(err)
+		return false, err
+	}
+
+	track := domain.NewTrack(trackDTO.Title, album.ArtistId, albumId, album.ReleaseYear, genreId, trackDTO.Milliseconds, trackDTO.Bytes)
+
+	err = a.trackRepo.SaveTrack(ctx, track)
+	if err != nil {
+		a.log.Error(err)
+		return false, err
+	}
+
+	return true, nil
+}

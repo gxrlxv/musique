@@ -25,6 +25,7 @@ type ArtistClient interface {
 	CreateAlbum(ctx context.Context, in *CreateAlbumRequest, opts ...grpc.CallOption) (*CreateAlbumReply, error)
 	DeleteAlbum(ctx context.Context, in *DeleteAlbumRequest, opts ...grpc.CallOption) (*DeleteAlbumReply, error)
 	DeleteTrack(ctx context.Context, in *DeleteTrackRequest, opts ...grpc.CallOption) (*DeleteTrackReply, error)
+	AddTrack(ctx context.Context, in *AddTrackRequest, opts ...grpc.CallOption) (*AddTrackReply, error)
 }
 
 type artistClient struct {
@@ -62,6 +63,15 @@ func (c *artistClient) DeleteTrack(ctx context.Context, in *DeleteTrackRequest, 
 	return out, nil
 }
 
+func (c *artistClient) AddTrack(ctx context.Context, in *AddTrackRequest, opts ...grpc.CallOption) (*AddTrackReply, error) {
+	out := new(AddTrackReply)
+	err := c.cc.Invoke(ctx, "/api.artist.v1.Artist/AddTrack", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArtistServer is the server API for Artist service.
 // All implementations must embed UnimplementedArtistServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type ArtistServer interface {
 	CreateAlbum(context.Context, *CreateAlbumRequest) (*CreateAlbumReply, error)
 	DeleteAlbum(context.Context, *DeleteAlbumRequest) (*DeleteAlbumReply, error)
 	DeleteTrack(context.Context, *DeleteTrackRequest) (*DeleteTrackReply, error)
+	AddTrack(context.Context, *AddTrackRequest) (*AddTrackReply, error)
 	mustEmbedUnimplementedArtistServer()
 }
 
@@ -84,6 +95,9 @@ func (UnimplementedArtistServer) DeleteAlbum(context.Context, *DeleteAlbumReques
 }
 func (UnimplementedArtistServer) DeleteTrack(context.Context, *DeleteTrackRequest) (*DeleteTrackReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTrack not implemented")
+}
+func (UnimplementedArtistServer) AddTrack(context.Context, *AddTrackRequest) (*AddTrackReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddTrack not implemented")
 }
 func (UnimplementedArtistServer) mustEmbedUnimplementedArtistServer() {}
 
@@ -152,6 +166,24 @@ func _Artist_DeleteTrack_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Artist_AddTrack_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddTrackRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArtistServer).AddTrack(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.artist.v1.Artist/AddTrack",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArtistServer).AddTrack(ctx, req.(*AddTrackRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Artist_ServiceDesc is the grpc.ServiceDesc for Artist service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +202,10 @@ var Artist_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteTrack",
 			Handler:    _Artist_DeleteTrack_Handler,
+		},
+		{
+			MethodName: "AddTrack",
+			Handler:    _Artist_AddTrack_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

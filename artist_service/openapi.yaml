@@ -32,6 +32,35 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Status'
     /artist/albums/{albumId}:
+        post:
+            tags:
+                - Artist
+            operationId: Artist_AddTrack
+            parameters:
+                - name: albumId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddTrackRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AddTrackReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         delete:
             tags:
                 - Artist
@@ -86,6 +115,18 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
+        AddTrackReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        AddTrackRequest:
+            type: object
+            properties:
+                albumId:
+                    type: string
+                track:
+                    $ref: '#/components/schemas/Track'
         CreateAlbumReply:
             type: object
             properties:

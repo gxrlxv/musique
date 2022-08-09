@@ -28,6 +28,13 @@ service Artist{
       delete: "/artist/albums/{album_id}/{track_id}"
     };
   };
+
+  rpc AddTrack(AddTrackRequest) returns(AddTrackReply){
+    option (google.api.http) = {
+      post: "/artist/albums/{album_id}"
+      body: "*"
+    };
+  };
 }
 
 message Track {
@@ -62,6 +69,15 @@ message DeleteTrackRequest{
 }
 
 message DeleteTrackReply{
+  bool success = 1;
+}
+
+message AddTrackRequest{
+  string album_id = 1;
+  Track track = 2;
+}
+
+message AddTrackReply{
   bool success = 1;
 }
 

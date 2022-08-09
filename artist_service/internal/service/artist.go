@@ -11,6 +11,7 @@ type ArtistUseCase interface {
 	CreateAlbum(ctx context.Context, album domain.CreateAlbumDTO) (string, error)
 	DeleteAlbum(ctx context.Context, albumId string) (bool, error)
 	DeleteTrack(ctx context.Context, albumId, trackId string) (bool, error)
+	AddTrack(ctx context.Context, albumId string, track domain.CreateTrackDTO) (bool, error)
 }
 
 type ArtistService struct {
@@ -89,4 +90,24 @@ func (as *ArtistService) DeleteTrack(ctx context.Context, in *v1.DeleteTrackRequ
 	return &v1.DeleteTrackReply{
 		Success: success,
 	}, err
+}
+
+func (as *ArtistService) AddTrack(ctx context.Context, in *v1.AddTrackRequest) (*v1.AddTrackReply, error) {
+	as.log.Info("add track service")
+
+	track := domain.CreateTrackDTO{
+		Title:        in.Track.Title,
+		Genre:        in.Track.Genre,
+		Milliseconds: in.Track.Milliseconds,
+		Bytes:        in.Track.Bytes,
+	}
+
+	success, err := as.uc.AddTrack(ctx, in.AlbumId, track)
+	if err != nil {
+		return &v1.AddTrackReply{}, err
+	}
+
+	return &v1.AddTrackReply{
+		Success: success,
+	}, nil
 }
