@@ -6,7 +6,6 @@ import (
 )
 
 var (
-	ErrUserNotFoundEmail        = status.Error(codes.NotFound, "user with given email not found")
 	ErrUserAlreadyExistEmail    = status.Error(codes.AlreadyExists, "user with given email already exist")
 	ErrUserAlreadyExistUsername = status.Error(codes.AlreadyExists, "user with given username already exist")
 	ErrUserAlreadyExistPhone    = status.Error(codes.AlreadyExists, "user with given phone already exist")

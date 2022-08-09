@@ -1,6 +1,8 @@
 package usecase
 
-import "context"
+import (
+	"context"
+)
 
 type PlaylistRepository interface {
 	Create(ctx context.Context, userId string) error

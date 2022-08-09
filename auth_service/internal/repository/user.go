@@ -5,8 +5,17 @@ import (
 	"github.com/gxrlxv/musique/auth_service/internal/domain"
 	"github.com/gxrlxv/musique/auth_service/pkg/client/postgresql"
 	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v4"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
+
+var (
+	ErrUserNotFoundEmail    = status.Error(codes.NotFound, "user with given email not found")
+	ErrUserNotFoundUsername = status.Error(codes.NotFound, "user with given username not found")
+	ErrUserNotFoundPhone    = status.Error(codes.NotFound, "user with given phone not found")
 )
 
 type userRepository struct {
@@ -21,7 +30,7 @@ func NewUserRepository(client postgresql.Client, log *logrus.Logger) *userReposi
 	}
 }
 
-func (ur *userRepository) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
+func (ur *userRepository) Create(ctx context.Context, user domain.User) (domain.User, error) {
 	q := `
 			INSERT INTO public.user 
 				(username, email, password, first_name, last_name, gender, country, city, phone) 
@@ -35,15 +44,15 @@ func (ur *userRepository) Create(ctx context.Context, user *domain.User) (*domai
 		if pgErr, ok := err.(*pgconn.PgError); ok {
 			newErr := fmt.Errorf("SQL error: %s, Detail: %s, Where: %s, Code: %s, SQLstate: %s", pgErr.Message, pgErr.Detail, pgErr.Where, pgErr.Code, pgErr.SQLState())
 			ur.log.Error(newErr)
-			return &domain.User{}, newErr
+			return domain.User{}, newErr
 		}
-		return &domain.User{}, err
+		return domain.User{}, err
 	}
 
 	return user, nil
 }
 
-func (ur *userRepository) GetByUsername(ctx context.Context, username string) (*domain.User, error) {
+func (ur *userRepository) GetByUsername(ctx context.Context, username string) (domain.User, error) {
 	q := `
 		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role 
 		FROM public.user 
@@ -55,13 +64,16 @@ func (ur *userRepository) GetByUsername(ctx context.Context, username string) (*
 		&u.LastName, &u.Gender, &u.Country, &u.City, &u.Phone, &u.CreatedAt, &u.Role)
 	if err != nil {
 		ur.log.Error(err)
-		return &domain.User{}, err
+		if err == pgx.ErrNoRows {
+			return domain.User{}, ErrUserNotFoundUsername
+		}
+		return domain.User{}, err
 	}
 
-	return &u, nil
+	return u, nil
 }
 
-func (ur *userRepository) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
+func (ur *userRepository) GetByEmail(ctx context.Context, email string) (domain.User, error) {
 	q := `
 		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role 
 		FROM public.user 
@@ -73,13 +85,16 @@ func (ur *userRepository) GetByEmail(ctx context.Context, email string) (*domain
 		&u.LastName, &u.Gender, &u.Country, &u.City, &u.Phone, &u.CreatedAt, &u.Role)
 	if err != nil {
 		ur.log.Error(err)
-		return &domain.User{}, err
+		if err == pgx.ErrNoRows {
+			return domain.User{}, ErrUserNotFoundEmail
+		}
+		return domain.User{}, err
 	}
 
-	return &u, nil
+	return u, nil
 }
 
-func (ur *userRepository) GetByPhone(ctx context.Context, phone string) (*domain.User, error) {
+func (ur *userRepository) GetByPhone(ctx context.Context, phone string) (domain.User, error) {
 	q := `
 		SELECT id, username, email, password, first_name, last_name, gender, country, city, phone, created_at, role 
 		FROM public.user 
@@ -91,8 +106,11 @@ func (ur *userRepository) GetByPhone(ctx context.Context, phone string) (*domain
 		&u.LastName, &u.Gender, &u.Country, &u.City, &u.Phone, &u.CreatedAt, &u.Role)
 	if err != nil {
 		ur.log.Error(err)
-		return &domain.User{}, err
+		if err == pgx.ErrNoRows {
+			return domain.User{}, ErrUserNotFoundPhone
+		}
+		return domain.User{}, err
 	}
 
-	return &u, nil
+	return u, nil
 }

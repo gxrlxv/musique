@@ -13,10 +13,10 @@ import (
 var artistRole = "artist"
 
 type UserRepository interface {
-	Create(ctx context.Context, user *domain.User) (*domain.User, error)
-	GetByUsername(ctx context.Context, username string) (*domain.User, error)
-	GetByEmail(ctx context.Context, email string) (*domain.User, error)
-	GetByPhone(ctx context.Context, phone string) (*domain.User, error)
+	Create(ctx context.Context, user domain.User) (domain.User, error)
+	GetByUsername(ctx context.Context, username string) (domain.User, error)
+	GetByEmail(ctx context.Context, email string) (domain.User, error)
+	GetByPhone(ctx context.Context, phone string) (domain.User, error)
 }
 
 type SessionRepository interface {
@@ -52,31 +52,31 @@ func NewAuthUseCase(userRepo UserRepository, sessionRepo SessionRepository, play
 	}
 }
 
-func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*domain.User, error) {
+func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (domain.User, error) {
 	a.log.Info("signUp use case")
 	if dto.Password != dto.RepeatPassword {
-		return &domain.User{}, ErrPasswordDontMatch
+		return domain.User{}, ErrPasswordDontMatch
 	}
 
 	if u, _ := a.userRepo.GetByEmail(ctx, dto.Email); u.Email == dto.Email {
 		a.log.Error(ErrUserAlreadyExistEmail)
-		return &domain.User{}, ErrUserAlreadyExistEmail
+		return domain.User{}, ErrUserAlreadyExistEmail
 	}
 
 	if u, _ := a.userRepo.GetByUsername(ctx, dto.Username); u.Username == dto.Username {
 		a.log.Error(ErrUserAlreadyExistUsername)
-		return &domain.User{}, ErrUserAlreadyExistUsername
+		return domain.User{}, ErrUserAlreadyExistUsername
 	}
 
 	if u, _ := a.userRepo.GetByPhone(ctx, dto.Phone); u.Phone == dto.Phone {
 		a.log.Error(ErrUserAlreadyExistPhone)
-		return &domain.User{}, ErrUserAlreadyExistPhone
+		return domain.User{}, ErrUserAlreadyExistPhone
 	}
 	a.log.Info("hash password")
 	passwordHash, err := a.hasher.Hash(dto.Password)
 	if err != nil {
 		a.log.Error(err)
-		return &domain.User{}, internalErr(err)
+		return domain.User{}, internalErr(err)
 	}
 
 	model := domain.NewUser(dto, passwordHash)
@@ -84,35 +84,34 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (*do
 	user, err := a.userRepo.Create(ctx, model)
 	if err != nil {
 		a.log.Error(err)
-		return &domain.User{}, internalErr(err)
+		return domain.User{}, internalErr(err)
 	}
 
 	err = a.sessionRepo.CreateSession(ctx, user.ID)
 	if err != nil {
 		a.log.Error(err)
-		return &domain.User{}, internalErr(err)
+		return domain.User{}, internalErr(err)
 	}
 
 	return user, nil
 }
 
-func (a *authUseCase) SignIn(ctx context.Context, email, password string) (*domain.User, error) {
+func (a *authUseCase) SignIn(ctx context.Context, email, password string) (domain.User, error) {
 	a.log.Info("signIn use case")
 	user, err := a.userRepo.GetByEmail(ctx, email)
 	if err != nil {
-		a.log.Error(ErrUserNotFoundEmail)
-		return &domain.User{}, ErrUserNotFoundEmail
+		return domain.User{}, err
 	}
 
 	passwordHash, err := a.hasher.Hash(password)
 	if err != nil {
 		a.log.Error(err)
-		return &domain.User{}, internalErr(err)
+		return domain.User{}, internalErr(err)
 	}
 
 	if user.PasswordHash != passwordHash {
 		a.log.Error(ErrPasswordInvalid)
-		return &domain.User{}, ErrPasswordInvalid
+		return domain.User{}, ErrPasswordInvalid
 	}
 
 	return user, nil
