@@ -1,4 +1,4 @@
 /.idea
 /auth_service/logs
-/track_service/logs
+/userPlaylist_service/logs
 /artist_service/logs

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.1
-// source: track/v1/track.proto
+// source: userPlaylist/v1/userPlaylist.proto
 
 package v1
 
@@ -173,5 +173,5 @@ var Track_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "track/v1/track.proto",
+	Metadata: "userPlaylist/v1/userPlaylist.proto",
 }

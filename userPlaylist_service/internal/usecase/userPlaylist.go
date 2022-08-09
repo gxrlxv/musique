@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	v1 "github.com/gxrlxv/musique/music_service/api/track/v1"
+	v1 "github.com/gxrlxv/musique/music_service/api/userPlaylist/v1"
 )
 
 type trackUseCase struct {
