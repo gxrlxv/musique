@@ -7,51 +7,88 @@ import "google/api/annotations.proto";
 option go_package = "github.com/gxrlxv/musique/music_service/api/music/v1";
 
 
-// The track service definition.
+// The Music service definition.
 service Music{
   rpc AddTrack(AddTrackRequest) returns(AddTrackReply){
     option (google.api.http) = {
-      post: "/albums/{trackId}/add"
+      post: "/playlists/{playlist_id}/{track_id}"
       body: "*"
     };
   };
 
-  rpc RemoveTrack(RemoveTrackRequest) returns(RemoveTrackReply){
+  rpc AddAlbum(AddAlbumRequest) returns(AddAlbumReply){
     option (google.api.http) = {
-      delete: "/albums/{trackId}/remove"
+      post: "/playlists/{playlist_id}/{album_id}"
+      body: "*"
+    };
+  };
+
+  rpc Delete(DeleteTrackRequest) returns(DeleteTrackReply){
+    option (google.api.http) = {
+      delete: "/playlists/{playlist_id}/{track_id}"
+    };
+  };
+
+  rpc GetTrack(GetTrackRequest) returns(GetTrackReply){
+    option (google.api.http) = {
+      get: "/playlists/{playlist_id}/{track_id}"
     };
   };
 
   rpc GetTracks(GetTracksRequest) returns(GetTracksReply){
     option (google.api.http) = {
-      get: "/albums"
+      get: "/playlists/{playlist_id}"
     };
   };
 }
 
-
+message Track {
+  string title = 1;
+  string genre = 2;
+  int64 milliseconds = 3;
+  int64 bytes = 4;
+}
 
 message AddTrackRequest{
-  string trackId = 1;
+  string playlist_id = 1;
+  string track_id = 2;
 }
 
 message AddTrackReply{
-
+  bool success = 1;
 }
 
-
-message RemoveTrackRequest{
-  string trackId = 1;
+message AddAlbumRequest{
+  string playlist_id = 1;
+  string album_id = 2;
 }
 
-message RemoveTrackReply{
+message AddAlbumReply{
+  bool success = 1;
+}
 
+message DeleteTrackRequest{
+  string playlist_id = 1;
+  string track_id = 2;
+}
+
+message DeleteTrackReply{
+  bool success = 1;
+}
+
+message GetTrackRequest{
+  string playlist_id = 1;
+  string track_id = 2;
+}
+
+message GetTrackReply{
+  Track track = 1;
 }
 
 message GetTracksRequest{
-
+  string playlist_id = 1;
 }
 
 message GetTracksReply{
-
+  repeated Track tracks = 1;
 }

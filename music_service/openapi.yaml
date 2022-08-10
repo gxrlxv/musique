@@ -4,14 +4,20 @@
 openapi: 3.0.3
 info:
     title: Music API
-    description: The track service definition.
+    description: The Music service definition.
     version: 0.0.1
 paths:
-    /albums:
+    /playlists/{playlistId}:
         get:
             tags:
                 - Music
             operationId: Music_GetTracks
+            parameters:
+                - name: playlistId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -25,12 +31,80 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /albums/{trackId}/add:
+    /playlists/{playlistId}/{albumId}:
+        post:
+            tags:
+                - Music
+            operationId: Music_AddAlbum
+            parameters:
+                - name: playlistId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: albumId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddAlbumRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AddAlbumReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /playlists/{playlistId}/{trackId}:
+        get:
+            tags:
+                - Music
+            operationId: Music_GetTrack
+            parameters:
+                - name: playlistId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: trackId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetTrackReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         post:
             tags:
                 - Music
             operationId: Music_AddTrack
             parameters:
+                - name: playlistId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
                 - name: trackId
                   in: path
                   required: true
@@ -55,12 +129,16 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /albums/{trackId}/remove:
         delete:
             tags:
                 - Music
-            operationId: Music_RemoveTrack
+            operationId: Music_Delete
             parameters:
+                - name: playlistId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
                 - name: trackId
                   in: path
                   required: true
@@ -72,7 +150,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/RemoveTrackReply'
+                                $ref: '#/components/schemas/DeleteTrackReply'
                 default:
                     description: Default error response
                     content:
@@ -81,17 +159,47 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
+        AddAlbumReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        AddAlbumRequest:
+            type: object
+            properties:
+                playlistId:
+                    type: string
+                albumId:
+                    type: string
         AddTrackReply:
             type: object
-            properties: {}
+            properties:
+                success:
+                    type: boolean
         AddTrackRequest:
             type: object
             properties:
+                playlistId:
+                    type: string
                 trackId:
                     type: string
+        DeleteTrackReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        GetTrackReply:
+            type: object
+            properties:
+                track:
+                    $ref: '#/components/schemas/Track'
         GetTracksReply:
             type: object
-            properties: {}
+            properties:
+                tracks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Track'
         GoogleProtobufAny:
             type: object
             properties:
@@ -100,9 +208,6 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        RemoveTrackReply:
-            type: object
-            properties: {}
         Status:
             type: object
             properties:
@@ -119,5 +224,18 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        Track:
+            type: object
+            properties:
+                title:
+                    type: string
+                genre:
+                    type: string
+                milliseconds:
+                    type: integer
+                    format: int64
+                bytes:
+                    type: integer
+                    format: int64
 tags:
     - name: Music

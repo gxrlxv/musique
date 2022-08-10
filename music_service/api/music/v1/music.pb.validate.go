@@ -35,6 +35,112 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on Track with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Track) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Track with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in TrackMultiError, or nil if none found.
+func (m *Track) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Track) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Title
+
+	// no validation rules for Genre
+
+	// no validation rules for Milliseconds
+
+	// no validation rules for Bytes
+
+	if len(errors) > 0 {
+		return TrackMultiError(errors)
+	}
+
+	return nil
+}
+
+// TrackMultiError is an error wrapping multiple validation errors returned by
+// Track.ValidateAll() if the designated constraints aren't met.
+type TrackMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m TrackMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m TrackMultiError) AllErrors() []error { return m }
+
+// TrackValidationError is the validation error returned by Track.Validate if
+// the designated constraints aren't met.
+type TrackValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e TrackValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e TrackValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e TrackValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e TrackValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e TrackValidationError) ErrorName() string { return "TrackValidationError" }
+
+// Error satisfies the builtin error interface
+func (e TrackValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sTrack.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = TrackValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = TrackValidationError{}
+
 // Validate checks the field values on AddTrackRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -56,6 +162,8 @@ func (m *AddTrackRequest) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for PlaylistId
 
 	// no validation rules for TrackId
 
@@ -159,6 +267,8 @@ func (m *AddTrackReply) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Success
+
 	if len(errors) > 0 {
 		return AddTrackReplyMultiError(errors)
 	}
@@ -237,44 +347,252 @@ var _ interface {
 	ErrorName() string
 } = AddTrackReplyValidationError{}
 
-// Validate checks the field values on RemoveTrackRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *RemoveTrackRequest) Validate() error {
+// Validate checks the field values on AddAlbumRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *AddAlbumRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on RemoveTrackRequest with the rules
+// ValidateAll checks the field values on AddAlbumRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// RemoveTrackRequestMultiError, or nil if none found.
-func (m *RemoveTrackRequest) ValidateAll() error {
+// AddAlbumRequestMultiError, or nil if none found.
+func (m *AddAlbumRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *RemoveTrackRequest) validate(all bool) error {
+func (m *AddAlbumRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
+
+	// no validation rules for PlaylistId
+
+	// no validation rules for AlbumId
+
+	if len(errors) > 0 {
+		return AddAlbumRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// AddAlbumRequestMultiError is an error wrapping multiple validation errors
+// returned by AddAlbumRequest.ValidateAll() if the designated constraints
+// aren't met.
+type AddAlbumRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AddAlbumRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AddAlbumRequestMultiError) AllErrors() []error { return m }
+
+// AddAlbumRequestValidationError is the validation error returned by
+// AddAlbumRequest.Validate if the designated constraints aren't met.
+type AddAlbumRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AddAlbumRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AddAlbumRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AddAlbumRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AddAlbumRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AddAlbumRequestValidationError) ErrorName() string { return "AddAlbumRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AddAlbumRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAddAlbumRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AddAlbumRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AddAlbumRequestValidationError{}
+
+// Validate checks the field values on AddAlbumReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *AddAlbumReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AddAlbumReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in AddAlbumReplyMultiError, or
+// nil if none found.
+func (m *AddAlbumReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AddAlbumReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	if len(errors) > 0 {
+		return AddAlbumReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// AddAlbumReplyMultiError is an error wrapping multiple validation errors
+// returned by AddAlbumReply.ValidateAll() if the designated constraints
+// aren't met.
+type AddAlbumReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AddAlbumReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AddAlbumReplyMultiError) AllErrors() []error { return m }
+
+// AddAlbumReplyValidationError is the validation error returned by
+// AddAlbumReply.Validate if the designated constraints aren't met.
+type AddAlbumReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AddAlbumReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AddAlbumReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AddAlbumReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AddAlbumReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AddAlbumReplyValidationError) ErrorName() string { return "AddAlbumReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AddAlbumReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAddAlbumReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AddAlbumReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AddAlbumReplyValidationError{}
+
+// Validate checks the field values on DeleteTrackRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteTrackRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteTrackRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteTrackRequestMultiError, or nil if none found.
+func (m *DeleteTrackRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteTrackRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for PlaylistId
 
 	// no validation rules for TrackId
 
 	if len(errors) > 0 {
-		return RemoveTrackRequestMultiError(errors)
+		return DeleteTrackRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// RemoveTrackRequestMultiError is an error wrapping multiple validation errors
-// returned by RemoveTrackRequest.ValidateAll() if the designated constraints
+// DeleteTrackRequestMultiError is an error wrapping multiple validation errors
+// returned by DeleteTrackRequest.ValidateAll() if the designated constraints
 // aren't met.
-type RemoveTrackRequestMultiError []error
+type DeleteTrackRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m RemoveTrackRequestMultiError) Error() string {
+func (m DeleteTrackRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -283,11 +601,11 @@ func (m RemoveTrackRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m RemoveTrackRequestMultiError) AllErrors() []error { return m }
+func (m DeleteTrackRequestMultiError) AllErrors() []error { return m }
 
-// RemoveTrackRequestValidationError is the validation error returned by
-// RemoveTrackRequest.Validate if the designated constraints aren't met.
-type RemoveTrackRequestValidationError struct {
+// DeleteTrackRequestValidationError is the validation error returned by
+// DeleteTrackRequest.Validate if the designated constraints aren't met.
+type DeleteTrackRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -295,24 +613,24 @@ type RemoveTrackRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e RemoveTrackRequestValidationError) Field() string { return e.field }
+func (e DeleteTrackRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e RemoveTrackRequestValidationError) Reason() string { return e.reason }
+func (e DeleteTrackRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e RemoveTrackRequestValidationError) Cause() error { return e.cause }
+func (e DeleteTrackRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e RemoveTrackRequestValidationError) Key() bool { return e.key }
+func (e DeleteTrackRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e RemoveTrackRequestValidationError) ErrorName() string {
-	return "RemoveTrackRequestValidationError"
+func (e DeleteTrackRequestValidationError) ErrorName() string {
+	return "DeleteTrackRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e RemoveTrackRequestValidationError) Error() string {
+func (e DeleteTrackRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -324,14 +642,14 @@ func (e RemoveTrackRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sRemoveTrackRequest.%s: %s%s",
+		"invalid %sDeleteTrackRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = RemoveTrackRequestValidationError{}
+var _ error = DeleteTrackRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -339,44 +657,46 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = RemoveTrackRequestValidationError{}
+} = DeleteTrackRequestValidationError{}
 
-// Validate checks the field values on RemoveTrackReply with the rules defined
+// Validate checks the field values on DeleteTrackReply with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
-func (m *RemoveTrackReply) Validate() error {
+func (m *DeleteTrackReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on RemoveTrackReply with the rules
+// ValidateAll checks the field values on DeleteTrackReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// RemoveTrackReplyMultiError, or nil if none found.
-func (m *RemoveTrackReply) ValidateAll() error {
+// DeleteTrackReplyMultiError, or nil if none found.
+func (m *DeleteTrackReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *RemoveTrackReply) validate(all bool) error {
+func (m *DeleteTrackReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
+	// no validation rules for Success
+
 	if len(errors) > 0 {
-		return RemoveTrackReplyMultiError(errors)
+		return DeleteTrackReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// RemoveTrackReplyMultiError is an error wrapping multiple validation errors
-// returned by RemoveTrackReply.ValidateAll() if the designated constraints
+// DeleteTrackReplyMultiError is an error wrapping multiple validation errors
+// returned by DeleteTrackReply.ValidateAll() if the designated constraints
 // aren't met.
-type RemoveTrackReplyMultiError []error
+type DeleteTrackReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m RemoveTrackReplyMultiError) Error() string {
+func (m DeleteTrackReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -385,11 +705,11 @@ func (m RemoveTrackReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m RemoveTrackReplyMultiError) AllErrors() []error { return m }
+func (m DeleteTrackReplyMultiError) AllErrors() []error { return m }
 
-// RemoveTrackReplyValidationError is the validation error returned by
-// RemoveTrackReply.Validate if the designated constraints aren't met.
-type RemoveTrackReplyValidationError struct {
+// DeleteTrackReplyValidationError is the validation error returned by
+// DeleteTrackReply.Validate if the designated constraints aren't met.
+type DeleteTrackReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -397,22 +717,22 @@ type RemoveTrackReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e RemoveTrackReplyValidationError) Field() string { return e.field }
+func (e DeleteTrackReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e RemoveTrackReplyValidationError) Reason() string { return e.reason }
+func (e DeleteTrackReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e RemoveTrackReplyValidationError) Cause() error { return e.cause }
+func (e DeleteTrackReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e RemoveTrackReplyValidationError) Key() bool { return e.key }
+func (e DeleteTrackReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e RemoveTrackReplyValidationError) ErrorName() string { return "RemoveTrackReplyValidationError" }
+func (e DeleteTrackReplyValidationError) ErrorName() string { return "DeleteTrackReplyValidationError" }
 
 // Error satisfies the builtin error interface
-func (e RemoveTrackReplyValidationError) Error() string {
+func (e DeleteTrackReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -424,14 +744,14 @@ func (e RemoveTrackReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sRemoveTrackReply.%s: %s%s",
+		"invalid %sDeleteTrackReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = RemoveTrackReplyValidationError{}
+var _ error = DeleteTrackReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -439,7 +759,240 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = RemoveTrackReplyValidationError{}
+} = DeleteTrackReplyValidationError{}
+
+// Validate checks the field values on GetTrackRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetTrackRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetTrackRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetTrackRequestMultiError, or nil if none found.
+func (m *GetTrackRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetTrackRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for PlaylistId
+
+	// no validation rules for TrackId
+
+	if len(errors) > 0 {
+		return GetTrackRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetTrackRequestMultiError is an error wrapping multiple validation errors
+// returned by GetTrackRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetTrackRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetTrackRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetTrackRequestMultiError) AllErrors() []error { return m }
+
+// GetTrackRequestValidationError is the validation error returned by
+// GetTrackRequest.Validate if the designated constraints aren't met.
+type GetTrackRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetTrackRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetTrackRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetTrackRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetTrackRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetTrackRequestValidationError) ErrorName() string { return "GetTrackRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetTrackRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetTrackRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetTrackRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetTrackRequestValidationError{}
+
+// Validate checks the field values on GetTrackReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GetTrackReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetTrackReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in GetTrackReplyMultiError, or
+// nil if none found.
+func (m *GetTrackReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetTrackReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetTrack()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetTrackReplyValidationError{
+					field:  "Track",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetTrackReplyValidationError{
+					field:  "Track",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTrack()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetTrackReplyValidationError{
+				field:  "Track",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetTrackReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetTrackReplyMultiError is an error wrapping multiple validation errors
+// returned by GetTrackReply.ValidateAll() if the designated constraints
+// aren't met.
+type GetTrackReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetTrackReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetTrackReplyMultiError) AllErrors() []error { return m }
+
+// GetTrackReplyValidationError is the validation error returned by
+// GetTrackReply.Validate if the designated constraints aren't met.
+type GetTrackReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetTrackReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetTrackReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetTrackReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetTrackReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetTrackReplyValidationError) ErrorName() string { return "GetTrackReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetTrackReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetTrackReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetTrackReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetTrackReplyValidationError{}
 
 // Validate checks the field values on GetTracksRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -462,6 +1015,8 @@ func (m *GetTracksRequest) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for PlaylistId
 
 	if len(errors) > 0 {
 		return GetTracksRequestMultiError(errors)
@@ -562,6 +1117,40 @@ func (m *GetTracksReply) validate(all bool) error {
 	}
 
 	var errors []error
+
+	for idx, item := range m.GetTracks() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetTracksReplyValidationError{
+						field:  fmt.Sprintf("Tracks[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetTracksReplyValidationError{
+						field:  fmt.Sprintf("Tracks[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetTracksReplyValidationError{
+					field:  fmt.Sprintf("Tracks[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return GetTracksReplyMultiError(errors)
