@@ -1,5 +1,5 @@
 # Music service
-
+Artist service - that allows users to interact with their playlists 
 ## Music service API
 
 | Endpoint                            | HTTP method | Description                                     |
