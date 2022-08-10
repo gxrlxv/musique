@@ -5,13 +5,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type musicRepository struct {
+type trackRepository struct {
 	client postgresql.Client
 	log    *logrus.Logger
 }
 
-func NewMusicRepository(client postgresql.Client, log *logrus.Logger) *musicRepository {
-	return &musicRepository{
+func NewMusicRepository(client postgresql.Client, log *logrus.Logger) *trackRepository {
+	return &trackRepository{
 		client: client,
 		log:    log,
 	}
