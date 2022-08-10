@@ -1,6 +1,6 @@
-# Auth service
+# Music service
 
-## Auth service API
+## Music service API
 
 | Endpoint                            | HTTP method | Description                                     |
 |-------------------------------------|-------------|-------------------------------------------------|
