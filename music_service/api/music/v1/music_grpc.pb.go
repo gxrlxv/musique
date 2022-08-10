@@ -24,9 +24,9 @@ const _ = grpc.SupportPackageIsVersion7
 type MusicClient interface {
 	AddTrack(ctx context.Context, in *AddTrackRequest, opts ...grpc.CallOption) (*AddTrackReply, error)
 	AddAlbum(ctx context.Context, in *AddAlbumRequest, opts ...grpc.CallOption) (*AddAlbumReply, error)
-	Delete(ctx context.Context, in *DeleteTrackRequest, opts ...grpc.CallOption) (*DeleteTrackReply, error)
+	DeleteTrack(ctx context.Context, in *DeleteTrackRequest, opts ...grpc.CallOption) (*DeleteTrackReply, error)
 	GetTrack(ctx context.Context, in *GetTrackRequest, opts ...grpc.CallOption) (*GetTrackReply, error)
-	GetTracks(ctx context.Context, in *GetTracksRequest, opts ...grpc.CallOption) (*GetTracksReply, error)
+	GetAllTracks(ctx context.Context, in *GetTracksRequest, opts ...grpc.CallOption) (*GetTracksReply, error)
 }
 
 type musicClient struct {
@@ -55,9 +55,9 @@ func (c *musicClient) AddAlbum(ctx context.Context, in *AddAlbumRequest, opts ..
 	return out, nil
 }
 
-func (c *musicClient) Delete(ctx context.Context, in *DeleteTrackRequest, opts ...grpc.CallOption) (*DeleteTrackReply, error) {
+func (c *musicClient) DeleteTrack(ctx context.Context, in *DeleteTrackRequest, opts ...grpc.CallOption) (*DeleteTrackReply, error) {
 	out := new(DeleteTrackReply)
-	err := c.cc.Invoke(ctx, "/api.track.v1.Music/Delete", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.track.v1.Music/DeleteTrack", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -73,9 +73,9 @@ func (c *musicClient) GetTrack(ctx context.Context, in *GetTrackRequest, opts ..
 	return out, nil
 }
 
-func (c *musicClient) GetTracks(ctx context.Context, in *GetTracksRequest, opts ...grpc.CallOption) (*GetTracksReply, error) {
+func (c *musicClient) GetAllTracks(ctx context.Context, in *GetTracksRequest, opts ...grpc.CallOption) (*GetTracksReply, error) {
 	out := new(GetTracksReply)
-	err := c.cc.Invoke(ctx, "/api.track.v1.Music/GetTracks", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.track.v1.Music/GetAllTracks", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,9 +88,9 @@ func (c *musicClient) GetTracks(ctx context.Context, in *GetTracksRequest, opts 
 type MusicServer interface {
 	AddTrack(context.Context, *AddTrackRequest) (*AddTrackReply, error)
 	AddAlbum(context.Context, *AddAlbumRequest) (*AddAlbumReply, error)
-	Delete(context.Context, *DeleteTrackRequest) (*DeleteTrackReply, error)
+	DeleteTrack(context.Context, *DeleteTrackRequest) (*DeleteTrackReply, error)
 	GetTrack(context.Context, *GetTrackRequest) (*GetTrackReply, error)
-	GetTracks(context.Context, *GetTracksRequest) (*GetTracksReply, error)
+	GetAllTracks(context.Context, *GetTracksRequest) (*GetTracksReply, error)
 	mustEmbedUnimplementedMusicServer()
 }
 
@@ -104,14 +104,14 @@ func (UnimplementedMusicServer) AddTrack(context.Context, *AddTrackRequest) (*Ad
 func (UnimplementedMusicServer) AddAlbum(context.Context, *AddAlbumRequest) (*AddAlbumReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddAlbum not implemented")
 }
-func (UnimplementedMusicServer) Delete(context.Context, *DeleteTrackRequest) (*DeleteTrackReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+func (UnimplementedMusicServer) DeleteTrack(context.Context, *DeleteTrackRequest) (*DeleteTrackReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTrack not implemented")
 }
 func (UnimplementedMusicServer) GetTrack(context.Context, *GetTrackRequest) (*GetTrackReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTrack not implemented")
 }
-func (UnimplementedMusicServer) GetTracks(context.Context, *GetTracksRequest) (*GetTracksReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTracks not implemented")
+func (UnimplementedMusicServer) GetAllTracks(context.Context, *GetTracksRequest) (*GetTracksReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllTracks not implemented")
 }
 func (UnimplementedMusicServer) mustEmbedUnimplementedMusicServer() {}
 
@@ -162,20 +162,20 @@ func _Music_AddAlbum_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Music_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Music_DeleteTrack_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteTrackRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MusicServer).Delete(ctx, in)
+		return srv.(MusicServer).DeleteTrack(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.track.v1.Music/Delete",
+		FullMethod: "/api.track.v1.Music/DeleteTrack",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MusicServer).Delete(ctx, req.(*DeleteTrackRequest))
+		return srv.(MusicServer).DeleteTrack(ctx, req.(*DeleteTrackRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -198,20 +198,20 @@ func _Music_GetTrack_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Music_GetTracks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Music_GetAllTracks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTracksRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MusicServer).GetTracks(ctx, in)
+		return srv.(MusicServer).GetAllTracks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.track.v1.Music/GetTracks",
+		FullMethod: "/api.track.v1.Music/GetAllTracks",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MusicServer).GetTracks(ctx, req.(*GetTracksRequest))
+		return srv.(MusicServer).GetAllTracks(ctx, req.(*GetTracksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -232,16 +232,16 @@ var Music_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Music_AddAlbum_Handler,
 		},
 		{
-			MethodName: "Delete",
-			Handler:    _Music_Delete_Handler,
+			MethodName: "DeleteTrack",
+			Handler:    _Music_DeleteTrack_Handler,
 		},
 		{
 			MethodName: "GetTrack",
 			Handler:    _Music_GetTrack_Handler,
 		},
 		{
-			MethodName: "GetTracks",
-			Handler:    _Music_GetTracks_Handler,
+			MethodName: "GetAllTracks",
+			Handler:    _Music_GetAllTracks_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

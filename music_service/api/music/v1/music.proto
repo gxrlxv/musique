@@ -23,7 +23,7 @@ service Music{
     };
   };
 
-  rpc Delete(DeleteTrackRequest) returns(DeleteTrackReply){
+  rpc DeleteTrack(DeleteTrackRequest) returns(DeleteTrackReply){
     option (google.api.http) = {
       delete: "/playlists/{playlist_id}/{track_id}"
     };
@@ -35,7 +35,7 @@ service Music{
     };
   };
 
-  rpc GetTracks(GetTracksRequest) returns(GetTracksReply){
+  rpc GetAllTracks(GetTracksRequest) returns(GetTracksReply){
     option (google.api.http) = {
       get: "/playlists/{playlist_id}"
     };

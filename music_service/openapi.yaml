@@ -11,7 +11,7 @@ paths:
         get:
             tags:
                 - Music
-            operationId: Music_GetTracks
+            operationId: Music_GetAllTracks
             parameters:
                 - name: playlistId
                   in: path
@@ -132,7 +132,7 @@ paths:
         delete:
             tags:
                 - Music
-            operationId: Music_Delete
+            operationId: Music_DeleteTrack
             parameters:
                 - name: playlistId
                   in: path

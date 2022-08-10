@@ -207,7 +207,7 @@ func local_request_Music_AddAlbum_0(ctx context.Context, marshaler runtime.Marsh
 
 }
 
-func request_Music_Delete_0(ctx context.Context, marshaler runtime.Marshaler, client MusicClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Music_DeleteTrack_0(ctx context.Context, marshaler runtime.Marshaler, client MusicClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DeleteTrackRequest
 	var metadata runtime.ServerMetadata
 
@@ -238,12 +238,12 @@ func request_Music_Delete_0(ctx context.Context, marshaler runtime.Marshaler, cl
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "track_id", err)
 	}
 
-	msg, err := client.Delete(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.DeleteTrack(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Music_Delete_0(ctx context.Context, marshaler runtime.Marshaler, server MusicServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Music_DeleteTrack_0(ctx context.Context, marshaler runtime.Marshaler, server MusicServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DeleteTrackRequest
 	var metadata runtime.ServerMetadata
 
@@ -274,7 +274,7 @@ func local_request_Music_Delete_0(ctx context.Context, marshaler runtime.Marshal
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "track_id", err)
 	}
 
-	msg, err := server.Delete(ctx, &protoReq)
+	msg, err := server.DeleteTrack(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -351,7 +351,7 @@ func local_request_Music_GetTrack_0(ctx context.Context, marshaler runtime.Marsh
 
 }
 
-func request_Music_GetTracks_0(ctx context.Context, marshaler runtime.Marshaler, client MusicClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_Music_GetAllTracks_0(ctx context.Context, marshaler runtime.Marshaler, client MusicClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetTracksRequest
 	var metadata runtime.ServerMetadata
 
@@ -372,12 +372,12 @@ func request_Music_GetTracks_0(ctx context.Context, marshaler runtime.Marshaler,
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "playlist_id", err)
 	}
 
-	msg, err := client.GetTracks(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetAllTracks(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Music_GetTracks_0(ctx context.Context, marshaler runtime.Marshaler, server MusicServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_Music_GetAllTracks_0(ctx context.Context, marshaler runtime.Marshaler, server MusicServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetTracksRequest
 	var metadata runtime.ServerMetadata
 
@@ -398,7 +398,7 @@ func local_request_Music_GetTracks_0(ctx context.Context, marshaler runtime.Mars
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "playlist_id", err)
 	}
 
-	msg, err := server.GetTracks(ctx, &protoReq)
+	msg, err := server.GetAllTracks(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -457,19 +457,19 @@ func RegisterMusicHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 
 	})
 
-	mux.Handle("DELETE", pattern_Music_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_Music_DeleteTrack_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.track.v1.Music/Delete", runtime.WithHTTPPathPattern("/playlists/{playlist_id}/{track_id}"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.track.v1.Music/DeleteTrack", runtime.WithHTTPPathPattern("/playlists/{playlist_id}/{track_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Music_Delete_0(ctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Music_DeleteTrack_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -477,7 +477,7 @@ func RegisterMusicHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			return
 		}
 
-		forward_Music_Delete_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Music_DeleteTrack_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -505,19 +505,19 @@ func RegisterMusicHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 
 	})
 
-	mux.Handle("GET", pattern_Music_GetTracks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Music_GetAllTracks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.track.v1.Music/GetTracks", runtime.WithHTTPPathPattern("/playlists/{playlist_id}"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.track.v1.Music/GetAllTracks", runtime.WithHTTPPathPattern("/playlists/{playlist_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Music_GetTracks_0(ctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Music_GetAllTracks_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -525,7 +525,7 @@ func RegisterMusicHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 			return
 		}
 
-		forward_Music_GetTracks_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Music_GetAllTracks_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -612,24 +612,24 @@ func RegisterMusicHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 
 	})
 
-	mux.Handle("DELETE", pattern_Music_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_Music_DeleteTrack_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api.track.v1.Music/Delete", runtime.WithHTTPPathPattern("/playlists/{playlist_id}/{track_id}"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api.track.v1.Music/DeleteTrack", runtime.WithHTTPPathPattern("/playlists/{playlist_id}/{track_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Music_Delete_0(ctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Music_DeleteTrack_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Music_Delete_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Music_DeleteTrack_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -654,24 +654,24 @@ func RegisterMusicHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 
 	})
 
-	mux.Handle("GET", pattern_Music_GetTracks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Music_GetAllTracks_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api.track.v1.Music/GetTracks", runtime.WithHTTPPathPattern("/playlists/{playlist_id}"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/api.track.v1.Music/GetAllTracks", runtime.WithHTTPPathPattern("/playlists/{playlist_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Music_GetTracks_0(ctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Music_GetAllTracks_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Music_GetTracks_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Music_GetAllTracks_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -683,11 +683,11 @@ var (
 
 	pattern_Music_AddAlbum_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"playlists", "playlist_id", "album_id"}, ""))
 
-	pattern_Music_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"playlists", "playlist_id", "track_id"}, ""))
+	pattern_Music_DeleteTrack_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"playlists", "playlist_id", "track_id"}, ""))
 
 	pattern_Music_GetTrack_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"playlists", "playlist_id", "track_id"}, ""))
 
-	pattern_Music_GetTracks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"playlists", "playlist_id"}, ""))
+	pattern_Music_GetAllTracks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"playlists", "playlist_id"}, ""))
 )
 
 var (
@@ -695,9 +695,9 @@ var (
 
 	forward_Music_AddAlbum_0 = runtime.ForwardResponseMessage
 
-	forward_Music_Delete_0 = runtime.ForwardResponseMessage
+	forward_Music_DeleteTrack_0 = runtime.ForwardResponseMessage
 
 	forward_Music_GetTrack_0 = runtime.ForwardResponseMessage
 
-	forward_Music_GetTracks_0 = runtime.ForwardResponseMessage
+	forward_Music_GetAllTracks_0 = runtime.ForwardResponseMessage
 )
