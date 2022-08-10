@@ -7,14 +7,14 @@ import (
 )
 
 type AlbumRepository interface {
-	CreateAlbum(ctx context.Context, album *domain.Album) (string, error)
+	CreateAlbum(ctx context.Context, album domain.Album) (string, error)
 	DeleteAlbum(ctx context.Context, albumId string) error
 	GetAlbumByID(ctx context.Context, albumId string) (domain.Album, error)
 	UpdateAlbum(ctx context.Context, albumDTO domain.UpdateAlbumDTO) error
 }
 
 type TrackRepository interface {
-	SaveTrack(ctx context.Context, track *domain.Track) error
+	SaveTrack(ctx context.Context, track domain.Track) error
 	DeleteTrack(ctx context.Context, albumId, trackId string) error
 	DeleteTracks(ctx context.Context, albumId string) error
 }

@@ -19,7 +19,7 @@ func NewTrackRepository(client postgresql.Client, log *logrus.Logger) *trackRepo
 	}
 }
 
-func (tr *trackRepository) SaveTrack(ctx context.Context, track *domain.Track) error {
+func (tr *trackRepository) SaveTrack(ctx context.Context, track domain.Track) error {
 	q := `
 			INSERT INTO public.track
     			(title, artist_id, album_id, genre_id, release_year, milliseconds, bytes)

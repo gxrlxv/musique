@@ -22,8 +22,8 @@ type UpdateAlbumDTO struct {
 	NumberTracks int
 }
 
-func NewAlbum(title, artistId string, releaseYear int32, numberTracks int) *Album {
-	return &Album{
+func NewAlbum(title, artistId string, releaseYear int32, numberTracks int) Album {
+	return Album{
 		Id:           "",
 		Title:        title,
 		ReleaseYear:  releaseYear,

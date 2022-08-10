@@ -19,7 +19,7 @@ func NewAlbumRepository(client postgresql.Client, log *logrus.Logger) *albumRepo
 	}
 }
 
-func (ar *albumRepository) CreateAlbum(ctx context.Context, album *domain.Album) (string, error) {
+func (ar *albumRepository) CreateAlbum(ctx context.Context, album domain.Album) (string, error) {
 	q := `
 			INSERT INTO public.album
     			(title, artist_id, release_year, number_tracks)
