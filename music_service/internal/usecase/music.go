@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	v1 "github.com/gxrlxv/musique/music_service/api/music/v1"
+	"github.com/gxrlxv/musique/music_service/internal/domain"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,18 +21,27 @@ func NewMusicUseCase(musicRepo MusicRepository, log *logrus.Logger) *musicUseCas
 	}
 }
 
-func (tu *musicUseCase) AddTrack(ctx context.Context, trackId string) (*v1.AddTrackReply, error) {
+func (m *musicUseCase) AddTrack(ctx context.Context, playlistId, trackId string) (bool, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (tu *musicUseCase) RemoveTrack(ctx context.Context, trackId string) (*v1.RemoveTrackReply, error) {
+func (m *musicUseCase) AddAlbum(ctx context.Context, playlistId, albumId string) (bool, error) {
 	//TODO implement me
-
 	panic("implement me")
 }
 
-func (tu *musicUseCase) GetTracks(ctx context.Context) (*v1.GetTracksReply, error) {
+func (m *musicUseCase) DeleteTrack(ctx context.Context, playlistId, trackId string) (bool, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *musicUseCase) GetTrack(ctx context.Context, playlistId, trackId string) (domain.Track, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *musicUseCase) GetAllTracks(ctx context.Context, playlistId string) ([]domain.Track, error) {
 	//TODO implement me
 	panic("implement me")
 }
