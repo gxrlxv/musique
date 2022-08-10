@@ -2,8 +2,8 @@
 
 ## Auth service API
 
-| Endpoint      | Description                      |
-|---------------|----------------------------------|
-| /auth/sign-up | Register new user                |
-| /auth/sign-in | Authentication user              |
-| /auth/refresh | Update access and refresh tokens |
+| Endpoint      | HTTP method | Description                      |
+|---------------|-------------|----------------------------------|
+| /auth/sign-up | POST        | Register new user                |
+| /auth/sign-in | POST        | Authentication user              |
+| /auth/refresh | POST        | Update access and refresh tokens |
