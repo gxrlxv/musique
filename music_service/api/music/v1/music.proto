@@ -44,9 +44,8 @@ service Music{
 
 message Track {
   string title = 1;
-  string genre = 2;
-  int64 milliseconds = 3;
-  int64 bytes = 4;
+  int64 milliseconds = 2;
+  int64 bytes = 3;
 }
 
 message AddTrackRequest{

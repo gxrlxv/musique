@@ -229,8 +229,6 @@ components:
             properties:
                 title:
                     type: string
-                genre:
-                    type: string
                 milliseconds:
                     type: integer
                     format: int64

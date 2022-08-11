@@ -58,8 +58,6 @@ func (m *Track) validate(all bool) error {
 
 	// no validation rules for Title
 
-	// no validation rules for Genre
-
 	// no validation rules for Milliseconds
 
 	// no validation rules for Bytes
