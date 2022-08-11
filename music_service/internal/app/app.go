@@ -24,9 +24,11 @@ func Run() {
 		log.Fatalf("%v", err)
 	}
 
-	musicRepo := repository.NewMusicRepository(postgreSQLClient, log)
+	playlistRepo := repository.NewPlaylistRepository(postgreSQLClient, log)
 
-	musicUseCase := usecase.NewMusicUseCase(musicRepo, log)
+	trackRepo := repository.NewTrackRepository(postgreSQLClient, log)
+
+	musicUseCase := usecase.NewMusicUseCase(playlistRepo, trackRepo, log)
 
 	musicService := service.NewMusicService(musicUseCase, log)
 
