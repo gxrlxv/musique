@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"github.com/gxrlxv/musique/music_service/internal/domain"
 	"github.com/gxrlxv/musique/music_service/pkg/client/postgresql"
 	"github.com/jackc/pgx/v4"
 	"github.com/sirupsen/logrus"
@@ -93,6 +94,37 @@ func (pr *playlistRepository) GetAllTracks(ctx context.Context, playlistId strin
 
 		tracks = append(tracks, trackId)
 	}
-	
+
 	return tracks, err
+}
+
+func (pr *playlistRepository) GetPlaylist(ctx context.Context, playlistId string) (domain.Playlist, error) {
+	q := `
+			SELECT id, title, number_tracks
+			FROM public.playlist
+			WHERE id = $1`
+
+	var playlist domain.Playlist
+
+	err := pr.client.QueryRow(ctx, q, playlistId).Scan(&playlist.Id, &playlist.Title, &playlist.NumberTracks)
+	if err != nil {
+		return domain.Playlist{}, err
+	}
+
+	return playlist, err
+}
+
+func (pr *playlistRepository) UpdatePlaylist(ctx context.Context, playlist domain.Playlist) error {
+	q := `
+			UPDATE public.playlist 
+			SET title = $1, number_tracks = $2 
+			WHERE id = $3 `
+
+	_, err := pr.client.Exec(ctx, q, playlist.Title, playlist.NumberTracks, playlist.Id)
+	if err != nil {
+		pr.log.Error(err)
+		return err
+	}
+
+	return err
 }

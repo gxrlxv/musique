@@ -12,7 +12,6 @@ import (
 
 var (
 	ErrTrackNotFound = status.Error(codes.NotFound, "track with given id not found")
-	ErrAlbumNotFound = status.Error(codes.NotFound, "album with given id not found")
 )
 
 type trackRepository struct {
@@ -58,9 +57,7 @@ func (tr *trackRepository) GetTracksByAlbumId(ctx context.Context, albumId strin
 
 	rows, err := tr.client.Query(ctx, q, albumId)
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return tracks, ErrAlbumNotFound
-		}
+		tr.log.Error(err)
 		return tracks, err
 	}
 

@@ -87,7 +87,6 @@ func (ms *MusicService) GetTrack(ctx context.Context, in *v1.GetTrackRequest) (*
 	return &v1.GetTrackReply{
 		Track: &v1.Track{
 			Title:        track.Title,
-			Genre:        track.Genre,
 			Milliseconds: track.Milliseconds,
 			Bytes:        track.Bytes,
 		},
@@ -104,12 +103,11 @@ func (ms *MusicService) GetAllTracks(ctx context.Context, in *v1.GetTracksReques
 		}, err
 	}
 
-	tracks := make([]*v1.Track, len(tracksDTO))
+	tracks := make([]*v1.Track, 0, len(tracksDTO))
 
 	for i := range tracksDTO {
 		track := &v1.Track{
 			Title:        tracksDTO[i].Title,
-			Genre:        tracksDTO[i].Genre,
 			Milliseconds: tracksDTO[i].Milliseconds,
 			Bytes:        tracksDTO[i].Bytes,
 		}
