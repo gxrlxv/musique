@@ -8,7 +8,7 @@ Logging: [logrus](https://github.com/sirupsen/logrus)\
 OpenAPI: [protoc-gen-openapi](https://github.com/google/gnostic/tree/main/cmd/protoc-gen-openapi)\
 [Docker](https://www.docker.com/)
 # Service data model
-![musique (8)](https://user-images.githubusercontent.com/71068953/183240109-317b151a-1e97-407c-8083-d76bd1f956a6.png)
+![musique (9)](https://user-images.githubusercontent.com/71068953/184134560-9cc08fc8-ac2c-45fd-a00a-c196a8ea2ff2.png)
 # Licence
 [MIT Licence](LICENCE)
 
