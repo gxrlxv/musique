@@ -31,11 +31,11 @@ func (tr *trackRepository) GetTrack(ctx context.Context, trackId string) (domain
 	q := `
 			SELECT title, bytes, milliseconds 
 			FROM public.track 
-			WHERE id = $1"`
+			WHERE id = $1`
 
 	var track domain.Track
 
-	err := tr.client.QueryRow(ctx, q, trackId).Scan(track.Title, track.Bytes, track.Milliseconds)
+	err := tr.client.QueryRow(ctx, q, trackId).Scan(&track.Title, &track.Bytes, &track.Milliseconds)
 	if err != nil {
 		tr.log.Error(err)
 		if err == pgx.ErrNoRows {
