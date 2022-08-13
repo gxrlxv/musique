@@ -32,8 +32,8 @@ type CreateUserDTO struct {
 	Phone          string `json:"phone"`
 }
 
-func NewUser(dto CreateUserDTO, passwordHash string) User {
-	return User{
+func NewUser(dto CreateUserDTO, passwordHash string) *User {
+	return &User{
 		ID:           "",
 		Username:     dto.Username,
 		Email:        dto.Email,

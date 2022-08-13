@@ -56,7 +56,7 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 
 	album := domain.NewAlbum(albumDTO.Title, artistId, albumDTO.ReleaseYear, albumDTO.NumberTracks)
 
-	albumId, err := a.albumRepo.CreateAlbum(ctx, album)
+	albumId, err := a.albumRepo.CreateAlbum(ctx, *album)
 	if err != nil {
 		a.log.Error(err)
 		return "", err
@@ -71,7 +71,7 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 
 		track := domain.NewTrack(albumDTO.Tracks[i].Title, artistId, albumId, albumDTO.ReleaseYear, genreId, albumDTO.Tracks[i].Milliseconds, albumDTO.Tracks[i].Bytes)
 
-		err = a.trackRepo.SaveTrack(ctx, track)
+		err = a.trackRepo.SaveTrack(ctx, *track)
 		if err != nil {
 			a.log.Error(err)
 			return "", err
@@ -161,7 +161,7 @@ func (a *albumUseCase) AddTrack(ctx context.Context, albumId string, trackDTO do
 
 	track := domain.NewTrack(trackDTO.Title, album.ArtistId, albumId, album.ReleaseYear, genreId, trackDTO.Milliseconds, trackDTO.Bytes)
 
-	err = a.trackRepo.SaveTrack(ctx, track)
+	err = a.trackRepo.SaveTrack(ctx, *track)
 	if err != nil {
 		a.log.Error(err)
 		return false, err

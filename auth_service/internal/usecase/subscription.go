@@ -23,7 +23,7 @@ func (a *authUseCase) NewSubscription(ctx context.Context, userId string) error 
 
 	subscription := domain.NewSubscription(userId, freeSubId, subDuration)
 
-	err = a.subscriptionRepo.CreateSubscription(ctx, subscription)
+	err = a.subscriptionRepo.CreateSubscription(ctx, *subscription)
 	if err != nil {
 		return err
 	}

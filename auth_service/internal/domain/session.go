@@ -8,8 +8,8 @@ type Session struct {
 	ExpiresAt    time.Time `json:"expires_at"`
 }
 
-func NewSession(userId, refreshToken string, ttl time.Duration) Session {
-	return Session{
+func NewSession(userId, refreshToken string, ttl time.Duration) *Session {
+	return &Session{
 		UserId:       userId,
 		RefreshToken: refreshToken,
 		ExpiresAt:    time.Now().Add(ttl),

@@ -81,7 +81,7 @@ func (a *authUseCase) SignUp(ctx context.Context, dto domain.CreateUserDTO) (dom
 
 	model := domain.NewUser(dto, passwordHash)
 
-	user, err := a.userRepo.Create(ctx, model)
+	user, err := a.userRepo.Create(ctx, *model)
 	if err != nil {
 		a.log.Error(err)
 		return domain.User{}, internalErr(err)
@@ -133,7 +133,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 
 	session := domain.NewSession(userId, refresh, a.refreshTokenTTL)
 
-	if err := a.sessionRepo.UpdateSession(ctx, session); err != nil {
+	if err := a.sessionRepo.UpdateSession(ctx, *session); err != nil {
 		a.log.Error(err)
 		return &v1.Tokens{}, internalErr(err)
 	}
