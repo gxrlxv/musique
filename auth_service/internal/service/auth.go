@@ -12,7 +12,7 @@ type AuthUseCase interface {
 	SignIn(ctx context.Context, email, password string) (domain.User, error)
 	NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error)
 	GetIdFromRefresh(ctx context.Context, refresh string) (string, error)
-	IdentifyArtist(ctx context.Context, access string) (string, error)
+	Identify(ctx context.Context, access string) (string, error)
 	NewPlaylist(ctx context.Context, userId string) error
 	NewSubscription(ctx context.Context, userId string) error
 }
@@ -114,10 +114,10 @@ func (a *AuthService) RefreshToken(ctx context.Context, in *v1.RefreshTokenReque
 	return &v1.RefreshTokenReply{Tokens: tokens}, nil
 }
 
-func (a *AuthService) IdentifyArtist(ctx context.Context, in *v1.IdentifyArtistRequest) (*v1.IdentifyArtistReply, error) {
-	role, err := a.uc.IdentifyArtist(ctx, in.AccessToken)
+func (a *AuthService) Identify(ctx context.Context, in *v1.IdentifyRequest) (*v1.IdentifyReply, error) {
+	userId, err := a.uc.Identify(ctx, in.AccessToken)
 	if err != nil {
-		return &v1.IdentifyArtistReply{Role: role}, err
+		return &v1.IdentifyReply{UserId: userId}, err
 	}
-	return &v1.IdentifyArtistReply{Role: role}, nil
+	return &v1.IdentifyReply{UserId: userId}, nil
 }

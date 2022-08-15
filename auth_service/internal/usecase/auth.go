@@ -119,6 +119,7 @@ func (a *authUseCase) SignIn(ctx context.Context, email, password string) (domai
 
 func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error) {
 	a.log.Info("NewTokens use case")
+
 	refresh, err := a.tokenManager.NewRefreshToken()
 	if err != nil {
 		a.log.Error(err)
@@ -143,6 +144,7 @@ func (a *authUseCase) NewTokens(ctx context.Context, userId, role string) (*v1.T
 
 func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (string, error) {
 	a.log.Info("GetIdFromRefresh use case")
+
 	userId, err := a.sessionRepo.GetIdByToken(ctx, refresh)
 	if err != nil {
 		a.log.Error(ErrTokenInvalid)
@@ -152,17 +154,14 @@ func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (str
 	return userId, err
 }
 
-func (a *authUseCase) IdentifyArtist(ctx context.Context, access string) (string, error) {
-	a.log.Info("Identify use case")
-	role, err := a.tokenManager.Parse(access)
+func (a *authUseCase) Identify(ctx context.Context, access string) (string, error) {
+	a.log.Info("Identify artist use case")
+
+	claims, err := a.tokenManager.Parse(access)
 	if err != nil {
 		a.log.Error(ErrTokenInvalid)
 		return "", ErrTokenInvalid
 	}
 
-	if role != artistRole {
-		return "", ErrHaveNotPermission
-	}
-
-	return role, err
+	return claims["sub"].(string), err
 }

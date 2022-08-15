@@ -31,7 +31,7 @@ service Auth{
     };
   };
 
-  rpc IdentifyArtist(IdentifyArtistRequest) returns(IdentifyArtistReply){}
+  rpc Identify(IdentifyRequest) returns(IdentifyReply){}
 }
 
 message Tokens{
@@ -40,16 +40,16 @@ message Tokens{
 }
 
 message SignUpRequest{
-    string username = 1[(validate.rules).string = {pattern: "(?i)^[A-Za-z0-9_]+$", min_len: 4, max_len: 32}];
-    string email = 2[(validate.rules).string.email = true];
-    string password = 3[(validate.rules).string.min_len = 12];
-    string repeat_password = 4[(validate.rules).string.min_len = 12];
-    string first_name = 5[(validate.rules).string = {pattern: "(?i)^[a-zA-Z]+$"}];
-    string last_name = 6[(validate.rules).string = {pattern: "(?i)^[a-zA-Z]+$"}];
-    string gender = 7[(validate.rules).string = {in: ["Female", "Male", "Other"]}];
-    string country = 8[(validate.rules).string = {pattern: "(?i)^[a-zA-Z]+$"}];
-    string city = 9[(validate.rules).string = {pattern: "(?i)^[a-zA-Z]+$"}];
-    string phone = 10[(validate.rules).string = {pattern: "(?i)^[0-9]+$", max_len: 20}];
+  string username = 1[(validate.rules).string = {pattern: "(?i)^[A-Za-z0-9_]+$", min_len: 4, max_len: 32}];
+  string email = 2[(validate.rules).string.email = true];
+  string password = 3[(validate.rules).string.min_len = 12];
+  string repeat_password = 4[(validate.rules).string.min_len = 12];
+  string first_name = 5[(validate.rules).string = {pattern: "(?i)^[a-zA-Z]+$"}];
+  string last_name = 6[(validate.rules).string = {pattern: "(?i)^[a-zA-Z]+$"}];
+  string gender = 7[(validate.rules).string = {in: ["Female", "Male", "Other"]}];
+  string country = 8[(validate.rules).string = {pattern: "(?i)^[a-zA-Z]+$"}];
+  string city = 9[(validate.rules).string = {pattern: "(?i)^[a-zA-Z]+$"}];
+  string phone = 10[(validate.rules).string = {pattern: "(?i)^[0-9]+$", max_len: 20}];
 }
 
 message SignUpReply{
@@ -75,9 +75,9 @@ message RefreshTokenReply{
   Tokens tokens = 1;
 }
 
-message IdentifyArtistRequest {
+message IdentifyRequest {
   string access_token = 1;
 }
-message IdentifyArtistReply {
-  string role = 1;
+message IdentifyReply {
+  string user_id = 1;
 }
