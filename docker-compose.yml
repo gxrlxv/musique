@@ -10,6 +10,7 @@ services:
     depends_on:
       - auth
       - artist
+      - music
 
   auth:
     build: auth_service/
@@ -28,6 +29,16 @@ services:
     ports:
       - "8001:8001"
       - "9001:9001"
+    depends_on:
+      - postgres
+
+  music:
+    build: music_service/
+    command: ./music
+    container_name: music
+    ports:
+      - "8002:8002"
+      - "9002:9002"
     depends_on:
       - postgres
 
