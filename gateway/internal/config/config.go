@@ -17,6 +17,9 @@ type Config struct {
 	Artist struct {
 		Addr string `yaml:"addr"`
 	} `yaml:"artist"`
+	Music struct {
+		Addr string `yaml:"addr"`
+	} `yaml:"music"`
 }
 
 var instance *Config

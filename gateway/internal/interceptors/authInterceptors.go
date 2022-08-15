@@ -36,14 +36,14 @@ func NewAuthInterceptor(addr string, log *logrus.Logger) (*AuthInterceptor, func
 	return &AuthInterceptor{v1.NewAuthClient(conn)}, cleanup, nil
 }
 
-func (i *AuthInterceptor) identityArtist(ctx context.Context) (context.Context, error) {
+func (i *AuthInterceptor) identity(ctx context.Context) (context.Context, error) {
 	val := metautils.ExtractOutgoing(ctx).Get(authorizationHeader)
-	reply, err := i.client.IdentifyArtist(ctx, &v1.IdentifyArtistRequest{AccessToken: strings.TrimPrefix(val, "Bearer ")})
+	reply, err := i.client.Identify(ctx, &v1.IdentifyRequest{AccessToken: strings.TrimPrefix(val, "Bearer ")})
 	if err != nil {
 		return nil, err
 	}
 
-	return metadata.AppendToOutgoingContext(ctx, userIDHeader, reply.Role), nil
+	return metadata.AppendToOutgoingContext(ctx, userIDHeader, reply.UserId), nil
 }
 
 func (i *AuthInterceptor) Unary() grpc.UnaryClientInterceptor {
@@ -55,7 +55,7 @@ func (i *AuthInterceptor) Unary() grpc.UnaryClientInterceptor {
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) error {
-		ctx, err := i.identityArtist(ctx)
+		ctx, err := i.identity(ctx)
 		if err != nil {
 			return err
 		}
@@ -72,7 +72,7 @@ func (i *AuthInterceptor) Stream() grpc.StreamClientInterceptor {
 		streamer grpc.Streamer,
 		opts ...grpc.CallOption,
 	) (grpc.ClientStream, error) {
-		ctx, err := i.identityArtist(ctx)
+		ctx, err := i.identity(ctx)
 		if err != nil {
 			return nil, err
 		}

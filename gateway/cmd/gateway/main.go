@@ -21,7 +21,7 @@ func main() {
 		log.Error(err)
 	}
 
-	serverMux, cleanup2, err := registers.RegisterAll(cfg.Auth.Addr, cfg.Artist.Addr, authInterceptors)
+	serverMux, cleanup2, err := registers.RegisterAll(cfg.Auth.Addr, cfg.Artist.Addr, cfg.Music.Addr, authInterceptors)
 	if err != nil {
 		log.Error(err)
 	}

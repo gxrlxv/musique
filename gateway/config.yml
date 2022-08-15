@@ -4,3 +4,5 @@ auth:
   addr: auth:9000
 artist:
   addr: artist:9001
+music:
+  addr: music:9002
