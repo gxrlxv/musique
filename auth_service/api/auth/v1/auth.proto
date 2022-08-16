@@ -80,4 +80,5 @@ message IdentifyRequest {
 }
 message IdentifyReply {
   string user_id = 1;
+  string role = 2;
 }

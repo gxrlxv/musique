@@ -154,14 +154,14 @@ func (a *authUseCase) GetIdFromRefresh(ctx context.Context, refresh string) (str
 	return userId, err
 }
 
-func (a *authUseCase) Identify(ctx context.Context, access string) (string, error) {
+func (a *authUseCase) Identify(ctx context.Context, access string) (string, string, error) {
 	a.log.Info("Identify artist use case")
 
 	claims, err := a.tokenManager.Parse(access)
 	if err != nil {
 		a.log.Error(ErrTokenInvalid)
-		return "", ErrTokenInvalid
+		return "", "", ErrTokenInvalid
 	}
 
-	return claims["sub"].(string), err
+	return claims["sub"].(string), claims["role"].(string), err
 }
