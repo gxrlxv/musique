@@ -5,9 +5,9 @@ go 1.18
 require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.2
-	github.com/gxrlxv/musique/artist_service v0.0.0-20220815150113-7ec2ae0e95d2
-	github.com/gxrlxv/musique/auth_service v0.0.0-20220815150113-7ec2ae0e95d2
-	github.com/gxrlxv/musique/music_service v0.0.0-20220815150113-7ec2ae0e95d2
+	github.com/gxrlxv/musique/artist_service v0.0.0-20220815160650-d10c13774d73
+	github.com/gxrlxv/musique/auth_service v0.0.0-20220816150515-46109efc7091
+	github.com/gxrlxv/musique/music_service v0.0.0-20220816150515-46109efc7091
 	github.com/ilyakaznacheev/cleanenv v1.3.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20220101234140-673ab2c3ae75

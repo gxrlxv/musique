@@ -15,6 +15,7 @@ import (
 const (
 	authorizationHeader = runtime.MetadataPrefix + "authorization"
 	userIDHeader        = "user-id"
+	roleHeader          = "role"
 )
 
 type AuthInterceptor struct {
@@ -43,7 +44,7 @@ func (i *AuthInterceptor) identity(ctx context.Context) (context.Context, error)
 		return nil, err
 	}
 
-	return metadata.AppendToOutgoingContext(ctx, userIDHeader, reply.UserId), nil
+	return metadata.AppendToOutgoingContext(ctx, userIDHeader, reply.UserId, roleHeader, reply.Role), nil
 }
 
 func (i *AuthInterceptor) Unary() grpc.UnaryClientInterceptor {
