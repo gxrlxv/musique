@@ -12,6 +12,7 @@ type ArtistUseCase interface {
 	DeleteAlbum(ctx context.Context, albumId string) (bool, error)
 	DeleteTrack(ctx context.Context, albumId, trackId string) (bool, error)
 	AddTrack(ctx context.Context, albumId string, track domain.CreateTrackDTO) (bool, error)
+	CheckPermission(ctx context.Context) error
 }
 
 type ArtistService struct {
@@ -30,6 +31,11 @@ func NewArtistService(useCase ArtistUseCase, log *logrus.Logger) *ArtistService 
 
 func (as *ArtistService) CreateAlbum(ctx context.Context, in *v1.CreateAlbumRequest) (*v1.CreateAlbumReply, error) {
 	as.log.Info("create album service")
+
+	err := as.uc.CheckPermission(ctx)
+	if err != nil {
+		return &v1.CreateAlbumReply{}, err
+	}
 
 	var tracksDTO []*domain.CreateTrackDTO
 
@@ -65,6 +71,11 @@ func (as *ArtistService) CreateAlbum(ctx context.Context, in *v1.CreateAlbumRequ
 func (as *ArtistService) DeleteAlbum(ctx context.Context, in *v1.DeleteAlbumRequest) (*v1.DeleteAlbumReply, error) {
 	as.log.Info("delete album service")
 
+	err := as.uc.CheckPermission(ctx)
+	if err != nil {
+		return &v1.DeleteAlbumReply{}, err
+	}
+
 	success, err := as.uc.DeleteAlbum(ctx, in.AlbumId)
 	if err != nil {
 		return &v1.DeleteAlbumReply{
@@ -80,6 +91,11 @@ func (as *ArtistService) DeleteAlbum(ctx context.Context, in *v1.DeleteAlbumRequ
 func (as *ArtistService) DeleteTrack(ctx context.Context, in *v1.DeleteTrackRequest) (*v1.DeleteTrackReply, error) {
 	as.log.Info("delete track service")
 
+	err := as.uc.CheckPermission(ctx)
+	if err != nil {
+		return &v1.DeleteTrackReply{}, err
+	}
+
 	success, err := as.uc.DeleteTrack(ctx, in.AlbumId, in.TrackId)
 	if err != nil {
 		return &v1.DeleteTrackReply{
@@ -94,6 +110,11 @@ func (as *ArtistService) DeleteTrack(ctx context.Context, in *v1.DeleteTrackRequ
 
 func (as *ArtistService) AddTrack(ctx context.Context, in *v1.AddTrackRequest) (*v1.AddTrackReply, error) {
 	as.log.Info("add track service")
+
+	err := as.uc.CheckPermission(ctx)
+	if err != nil {
+		return &v1.AddTrackReply{}, err
+	}
 
 	track := domain.CreateTrackDTO{
 		Title:        in.Track.Title,

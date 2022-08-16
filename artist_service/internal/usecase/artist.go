@@ -4,7 +4,10 @@ import (
 	"context"
 	"github.com/gxrlxv/musique/artist_service/internal/domain"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc/metadata"
 )
+
+const artistRole = "artist"
 
 type AlbumRepository interface {
 	CreateAlbum(ctx context.Context, album domain.Album) (string, error)
@@ -168,4 +171,15 @@ func (a *albumUseCase) AddTrack(ctx context.Context, albumId string, trackDTO do
 	}
 
 	return true, nil
+}
+
+func (a *albumUseCase) CheckPermission(ctx context.Context) error {
+	md, _ := metadata.FromIncomingContext(ctx)
+
+	role := md.Get("role")
+	if role[0] != artistRole {
+		return ErrHaveNotPermission
+	}
+
+	return nil
 }
