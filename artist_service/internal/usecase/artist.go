@@ -3,43 +3,24 @@ package usecase
 import (
 	"context"
 	"github.com/gxrlxv/musique/artist_service/internal/domain"
+	"github.com/gxrlxv/musique/artist_service/internal/repository"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
 )
 
 const artistRole = "artist"
 
-type AlbumRepository interface {
-	CreateAlbum(ctx context.Context, album domain.Album) (string, error)
-	DeleteAlbum(ctx context.Context, albumId string) error
-	GetAlbumByID(ctx context.Context, albumId string) (domain.Album, error)
-	UpdateAlbum(ctx context.Context, albumDTO domain.UpdateAlbumDTO) error
-}
-
-type TrackRepository interface {
-	SaveTrack(ctx context.Context, track domain.Track) error
-	DeleteTrack(ctx context.Context, albumId, trackId string) error
-	DeleteTracks(ctx context.Context, albumId string) error
-}
-
-type GenreRepository interface {
-	GetByTitle(ctx context.Context, title string) (int, error)
-}
-
-type ArtistRepository interface {
-	GetByName(ctx context.Context, name string) (string, error)
-}
-
-type albumUseCase struct {
-	albumRepo  AlbumRepository
-	trackRepo  TrackRepository
-	genreRepo  GenreRepository
-	artistRepo ArtistRepository
+type artistUseCase struct {
+	albumRepo  repository.AlbumRepository
+	trackRepo  repository.TrackRepository
+	genreRepo  repository.GenreRepository
+	artistRepo repository.ArtistRepository
 	log        *logrus.Logger
 }
 
-func NewAlbumUseCase(albumRepo AlbumRepository, trackRepo TrackRepository, genreRepo GenreRepository, artistRepo ArtistRepository, log *logrus.Logger) *albumUseCase {
-	return &albumUseCase{
+func NewArtistUseCase(albumRepo repository.AlbumRepository, trackRepo repository.TrackRepository,
+	genreRepo repository.GenreRepository, artistRepo repository.ArtistRepository, log *logrus.Logger) *artistUseCase {
+	return &artistUseCase{
 		albumRepo:  albumRepo,
 		trackRepo:  trackRepo,
 		genreRepo:  genreRepo,
@@ -48,7 +29,7 @@ func NewAlbumUseCase(albumRepo AlbumRepository, trackRepo TrackRepository, genre
 	}
 }
 
-func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAlbumDTO) (string, error) {
+func (a *artistUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAlbumDTO) (string, error) {
 	a.log.Info("create album use case")
 
 	artistId, err := a.artistRepo.GetByName(ctx, albumDTO.ArtistName)
@@ -84,7 +65,7 @@ func (a *albumUseCase) CreateAlbum(ctx context.Context, albumDTO domain.CreateAl
 	return albumId, err
 }
 
-func (a *albumUseCase) DeleteAlbum(ctx context.Context, albumId string) (bool, error) {
+func (a *artistUseCase) DeleteAlbum(ctx context.Context, albumId string) (bool, error) {
 	a.log.Info("delete album use case")
 
 	_, err := a.albumRepo.GetAlbumByID(ctx, albumId)
@@ -107,7 +88,7 @@ func (a *albumUseCase) DeleteAlbum(ctx context.Context, albumId string) (bool, e
 	return true, err
 }
 
-func (a *albumUseCase) DeleteTrack(ctx context.Context, albumId, trackId string) (bool, error) {
+func (a *artistUseCase) DeleteTrack(ctx context.Context, albumId, trackId string) (bool, error) {
 	a.log.Info("delete track use case")
 
 	album, err := a.albumRepo.GetAlbumByID(ctx, albumId)
@@ -136,7 +117,7 @@ func (a *albumUseCase) DeleteTrack(ctx context.Context, albumId, trackId string)
 	return true, err
 }
 
-func (a *albumUseCase) AddTrack(ctx context.Context, albumId string, trackDTO domain.CreateTrackDTO) (bool, error) {
+func (a *artistUseCase) AddTrack(ctx context.Context, albumId string, trackDTO domain.CreateTrackDTO) (bool, error) {
 	a.log.Info("add track use case")
 
 	album, err := a.albumRepo.GetAlbumByID(ctx, albumId)
@@ -173,7 +154,7 @@ func (a *albumUseCase) AddTrack(ctx context.Context, albumId string, trackDTO do
 	return true, nil
 }
 
-func (a *albumUseCase) CheckPermission(ctx context.Context) error {
+func (a *artistUseCase) CheckPermission(ctx context.Context) error {
 	md, _ := metadata.FromIncomingContext(ctx)
 
 	role := md.Get("role")

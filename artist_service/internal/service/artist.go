@@ -4,24 +4,17 @@ import (
 	"context"
 	v1 "github.com/gxrlxv/musique/artist_service/api/artist/v1"
 	"github.com/gxrlxv/musique/artist_service/internal/domain"
+	"github.com/gxrlxv/musique/artist_service/internal/usecase"
 	"github.com/sirupsen/logrus"
 )
 
-type ArtistUseCase interface {
-	CreateAlbum(ctx context.Context, album domain.CreateAlbumDTO) (string, error)
-	DeleteAlbum(ctx context.Context, albumId string) (bool, error)
-	DeleteTrack(ctx context.Context, albumId, trackId string) (bool, error)
-	AddTrack(ctx context.Context, albumId string, track domain.CreateTrackDTO) (bool, error)
-	CheckPermission(ctx context.Context) error
-}
-
 type ArtistService struct {
 	v1.UnimplementedArtistServer
-	uc  ArtistUseCase
+	uc  *usecase.UseCase
 	log *logrus.Logger
 }
 
-func NewArtistService(useCase ArtistUseCase, log *logrus.Logger) *ArtistService {
+func NewArtistService(useCase *usecase.UseCase, log *logrus.Logger) *ArtistService {
 	return &ArtistService{
 		UnimplementedArtistServer: v1.UnimplementedArtistServer{},
 		uc:                        useCase,
