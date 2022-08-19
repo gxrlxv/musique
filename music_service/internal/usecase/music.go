@@ -3,35 +3,19 @@ package usecase
 import (
 	"context"
 	"github.com/gxrlxv/musique/music_service/internal/domain"
+	"github.com/gxrlxv/musique/music_service/internal/repository"
 	"github.com/sirupsen/logrus"
 )
 
-type PlaylistRepository interface {
-	SaveTrack(ctx context.Context, playlistId, trackId string) error
-	DeleteTrack(ctx context.Context, playlistId, trackId string) error
-	GetTrack(ctx context.Context, playlistId, trackId string) error
-	GetAllTracks(ctx context.Context, playlistId string) ([]string, error)
-	GetPlaylist(ctx context.Context, playlistId string) (domain.Playlist, error)
-	UpdatePlaylist(ctx context.Context, playlist domain.Playlist) error
-}
-
-type TrackRepository interface {
-	GetTrack(ctx context.Context, trackId string) (domain.Track, error)
-	GetTracksByAlbumId(ctx context.Context, albumId string) ([]domain.Track, error)
-}
-
-type AlbumRepository interface {
-	GetAlbum(ctx context.Context, albumId string) (domain.Album, error)
-}
-
 type musicUseCase struct {
-	playlistRepo PlaylistRepository
-	trackRepo    TrackRepository
-	albumRepo    AlbumRepository
+	playlistRepo repository.PlaylistRepository
+	trackRepo    repository.TrackRepository
+	albumRepo    repository.AlbumRepository
 	log          *logrus.Logger
 }
 
-func NewMusicUseCase(playlistRepo PlaylistRepository, trackRepo TrackRepository, albumRepo AlbumRepository, log *logrus.Logger) *musicUseCase {
+func NewMusicUseCase(playlistRepo repository.PlaylistRepository, trackRepo repository.TrackRepository,
+	albumRepo repository.AlbumRepository, log *logrus.Logger) *musicUseCase {
 	return &musicUseCase{
 		playlistRepo: playlistRepo,
 		trackRepo:    trackRepo,

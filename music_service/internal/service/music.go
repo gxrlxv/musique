@@ -3,25 +3,17 @@ package service
 import (
 	"context"
 	v1 "github.com/gxrlxv/musique/music_service/api/music/v1"
-	"github.com/gxrlxv/musique/music_service/internal/domain"
+	"github.com/gxrlxv/musique/music_service/internal/usecase"
 	"github.com/sirupsen/logrus"
 )
 
-type MusicUseCase interface {
-	AddTrack(ctx context.Context, playlistId, trackId string) (bool, error)
-	AddAlbum(ctx context.Context, playlistId, albumId string) (bool, error)
-	DeleteTrack(ctx context.Context, playlistId, trackId string) (bool, error)
-	GetTrack(ctx context.Context, playlistId, trackId string) (domain.Track, error)
-	GetAllTracks(ctx context.Context, playlistId string) ([]domain.Track, error)
-}
-
 type MusicService struct {
 	v1.UnimplementedMusicServer
-	uc  MusicUseCase
+	uc  *usecase.UseCase
 	log *logrus.Logger
 }
 
-func NewMusicService(useCase MusicUseCase, log *logrus.Logger) *MusicService {
+func NewMusicService(useCase *usecase.UseCase, log *logrus.Logger) *MusicService {
 	return &MusicService{
 		UnimplementedMusicServer: v1.UnimplementedMusicServer{},
 		uc:                       useCase,

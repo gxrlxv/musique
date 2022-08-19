@@ -24,17 +24,13 @@ func Run() {
 		log.Fatalf("%v", err)
 	}
 
-	playlistRepo := repository.NewPlaylistRepository(postgreSQLClient, log)
+	repositories := repository.NewRepository(postgreSQLClient, log)
 
-	trackRepo := repository.NewTrackRepository(postgreSQLClient, log)
+	useCases := usecase.NewUseCase(repositories, log)
 
-	albumRepo := repository.NewAlbumRepository(postgreSQLClient, log)
+	services := service.NewMusicService(useCases, log)
 
-	musicUseCase := usecase.NewMusicUseCase(playlistRepo, trackRepo, albumRepo, log)
-
-	musicService := service.NewMusicService(musicUseCase, log)
-
-	grpcServer := server.NewGRPCServer(musicService, log)
+	grpcServer := server.NewGRPCServer(services, log)
 
 	listen, err := net.Listen("tcp", cfg.Server.Grpc.Addr)
 	if err != nil {
