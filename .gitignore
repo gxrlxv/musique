@@ -2,3 +2,4 @@
 /auth_service/logs
 /music_service/logs
 /artist_service/logs
+/gateway/logs
