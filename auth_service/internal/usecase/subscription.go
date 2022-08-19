@@ -3,15 +3,9 @@ package usecase
 import (
 	"context"
 	"github.com/gxrlxv/musique/auth_service/internal/domain"
-	"time"
 )
 
 var freeSubId = 1
-
-type SubscriptionRepository interface {
-	CreateSubscription(ctx context.Context, subscription domain.Subscription) error
-	GetBySubscriptionId(ctx context.Context, id int) (time.Duration, error)
-}
 
 func (a *authUseCase) NewSubscription(ctx context.Context, userId string) error {
 	a.log.Info("New Subscription use case")

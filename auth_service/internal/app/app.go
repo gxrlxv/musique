@@ -26,13 +26,7 @@ func Run() {
 		log.Fatalf("%v", err)
 	}
 
-	userRepo := repository.NewUserRepository(postgreSQLClient, log)
-
-	sessionRepo := repository.NewSessionRepository(postgreSQLClient, log)
-
-	playlistRepo := repository.NewPlaylistRepository(postgreSQLClient, log)
-
-	subRepo := repository.NewSubscriptionRepository(postgreSQLClient, log)
+	repositories := repository.NewRepository(postgreSQLClient, log)
 
 	hasher := hash.NewSHA1Hasher(cfg.Hasher.Salt)
 
@@ -41,9 +35,9 @@ func Run() {
 		log.Fatalf("%v", err)
 	}
 
-	authUseCase := usecase.NewAuthUseCase(userRepo, sessionRepo, playlistRepo, subRepo, hasher, *manager, log, cfg.JWT.AccessTokenTTL, cfg.JWT.RefreshTokenTTL)
+	useCases := usecase.NewUseCase(repositories, log, hasher, *manager, cfg.JWT.AccessTokenTTL, cfg.JWT.RefreshTokenTTL)
 
-	authService := service.NewAuthService(authUseCase, log)
+	authService := service.NewAuthService(useCases, log)
 
 	grpcServer := server.NewGRPCServer(authService, log)
 

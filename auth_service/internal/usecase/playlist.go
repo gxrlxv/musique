@@ -4,10 +4,6 @@ import (
 	"context"
 )
 
-type PlaylistRepository interface {
-	Create(ctx context.Context, userId string) error
-}
-
 func (a *authUseCase) NewPlaylist(ctx context.Context, userId string) error {
 	a.log.Info("NewPlaylist use case")
 

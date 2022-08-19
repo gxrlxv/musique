@@ -4,26 +4,17 @@ import (
 	"context"
 	v1 "github.com/gxrlxv/musique/auth_service/api/auth/v1"
 	"github.com/gxrlxv/musique/auth_service/internal/domain"
+	"github.com/gxrlxv/musique/auth_service/internal/usecase"
 	"github.com/sirupsen/logrus"
 )
 
-type AuthUseCase interface {
-	SignUp(ctx context.Context, dto domain.CreateUserDTO) (domain.User, error)
-	SignIn(ctx context.Context, email, password string) (domain.User, error)
-	NewTokens(ctx context.Context, userId, role string) (*v1.Tokens, error)
-	GetIdFromRefresh(ctx context.Context, refresh string) (string, error)
-	Identify(ctx context.Context, access string) (string, string, error)
-	NewPlaylist(ctx context.Context, userId string) error
-	NewSubscription(ctx context.Context, userId string) error
-}
-
 type AuthService struct {
 	v1.UnimplementedAuthServer
-	uc  AuthUseCase
+	uc  *usecase.UseCase
 	log *logrus.Logger
 }
 
-func NewAuthService(useCase AuthUseCase, log *logrus.Logger) *AuthService {
+func NewAuthService(useCase *usecase.UseCase, log *logrus.Logger) *AuthService {
 	return &AuthService{
 		UnimplementedAuthServer: v1.UnimplementedAuthServer{},
 		uc:                      useCase,
